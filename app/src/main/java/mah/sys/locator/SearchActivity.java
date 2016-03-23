@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Skapa variabler
     private Button
         btnSearchRoom,
         btnSearchProg;
@@ -24,13 +25,17 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        // Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Tildela views efter ID.
         btnSearchProg = (Button)findViewById(R.id.buttonSearchProg);
         btnSearchRoom = (Button)findViewById(R.id.buttonSearchRoom);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
 
+        // Lägg till blickListener.
         btnSearchProg.setOnClickListener(this);
         btnSearchRoom.setOnClickListener(this);
     }
@@ -38,12 +43,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v){
         if(v == btnSearchRoom) {
+            // Byta till map aktiviteten med en sal-sökning.
             Intent intent = createIntent();
             intent.putExtra("isRoomSearch", true);
             startActivity(intent);
         }
 
         if(v == btnSearchProg) {
+            // TODO: IMPLEMENT (COULD)
             /*
             Intent intent = createIntent();
             intent.putExtra("isRoomSearch", false);
@@ -52,10 +59,17 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    /**
+     * Skapar ett nytt intent för MapActivity.
+     * @return Intent för MapActivity.
+     */
     private Intent createIntent() {
         Intent intent = new Intent(this,MapActivity.class);
-        String searchterm = textSearch.getText().toString();
-        intent.putExtra("searchTerm",searchterm);
+
+        // Vad användaren sökt på.
+        String searchTerm = textSearch.getText().toString();
+        intent.putExtra("searchTerm",searchTerm);
+
         return intent;
     }
 
