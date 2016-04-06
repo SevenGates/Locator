@@ -53,7 +53,7 @@ public class BuildingFragment extends Fragment {
             public void run() {
                 try {
                     // Skapa socket.
-                    Socket socket = new Socket("192.168.1.164", 8080);
+                    Socket socket = new Socket("81.227.253.254", 8080);
 
                     // Sätt strömmarna.
                     DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -78,6 +78,7 @@ public class BuildingFragment extends Fragment {
                     // Avkoda bytearrayen till en bild.
                     final Bitmap bitmap = BitmapFactory.decodeByteArray(buffer.toByteArray(), 0, buffer.toByteArray().length);
                     Log.w("Test", String.valueOf(bitmap.getWidth()));
+
                     // Kör på UI-tråden för att uppdatera imageView.
                     activity.runOnUiThread(new Runnable() {
                         @Override
