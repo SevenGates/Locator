@@ -3,4 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="search_for_room">Sök på sal</string>
     <string name="search_for_prog">Sök på program</string>
+    <string name="choosePlace">Välj Plats</string>
+    <string name="choosePlaceField">Välj plats...</string>
+    <string name="choose">Välj</string>
+    <string name="change_place">Byta Plats</string>
 </resources>
