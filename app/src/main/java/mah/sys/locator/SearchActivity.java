@@ -1,6 +1,7 @@
 package mah.sys.locator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,7 +28,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     // Skapa variabler
     private Button
         btnSearchRoom,
-        btnSearchProg;
+        btnSearchProg,
+        btnChangePlace;
     private EditText
         textSearch;
 
@@ -39,11 +41,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         // Tildela views efter ID.
         btnSearchProg = (Button)findViewById(R.id.buttonSearchProg);
         btnSearchRoom = (Button)findViewById(R.id.buttonSearchRoom);
+        btnChangePlace = (Button)findViewById(R.id.buttonChangePlace);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
 
         // Lägg till blickListener.
         btnSearchProg.setOnClickListener(this);
         btnSearchRoom.setOnClickListener(this);
+        btnChangePlace.setOnClickListener(this);
     }
 
     @Override
@@ -62,6 +66,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             intent.putExtra("isRoomSearch", false);
             startActivity(intent);
             */
+        }
+
+        if(v == btnChangePlace) {
+            // Ta bort den gamla sparade platsen.
+            SharedPreferences settings = getSharedPreferences("mypref",0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.remove("choosenComplex");
+
+            // Byta aktivitet.
+            startActivity(new Intent(this,SplashActivity.class));
         }
     }
 
