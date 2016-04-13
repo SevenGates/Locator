@@ -26,4 +26,11 @@ public class LoadingFragment extends Fragment {
         spinner = (ProgressBar)getView().findViewById(R.id.loading_spin);
         spinner.setVisibility(View.VISIBLE);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        //TODO: Detta måste kunna lösas bättre???
+        spinner.setVisibility(View.GONE);
+    }
 }

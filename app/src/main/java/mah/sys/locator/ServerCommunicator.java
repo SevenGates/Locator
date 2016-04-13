@@ -115,7 +115,7 @@ public class ServerCommunicator {
     }
 
     public Object[] searchRoom(final String searchTerm, final String choosenComplex) {
-        Object[] objects = new Object[4];
+        Object[] objects = new Object[4];/*
         try {
             // Skapa socket.
             Socket socket = new Socket(IP_ADDRESS, PORT);
@@ -169,7 +169,7 @@ public class ServerCommunicator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
         return objects;
     }
 }

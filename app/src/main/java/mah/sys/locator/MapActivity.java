@@ -1,5 +1,7 @@
 package mah.sys.locator;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -28,6 +30,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+
         Log.w("Test", "Activity Started");
 
         server = new ServerCommunicator();
@@ -41,14 +44,25 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         SharedPreferences settings = getSharedPreferences("mypref", 0);
         final String chosenComplex = settings.getString("chosenComplex", null);
 
-        GetAndSetObjectsRunnable runnable = new GetAndSetObjectsRunnable(isRoomSearch,searchTerm,chosenComplex);
+        ObservableRunnable<Object[]> runnable = new ObservableRunnable<Object[]>() {
+            @Override
+            public void run() {
+                if(isRoomSearch) {
+                    data = server.searchRoom(searchTerm,chosenComplex);
+                    setChanged();
+                    notifyObservers();
+                    Log.w("Test", "Observers Notified MapActiviy");
+                }
+            }
+        };
+
+        if(savedInstanceState != null)
+            return;
+
         runnable.addObserver(this);
-        Thread loadDataThread = new Thread(runnable);
-        Log.w("Test", "Thread Created");
-        loadDataThread.start();
-        Log.w("Test", "Thread Started");
+        new Thread(runnable).start();
         LoadingFragment startFragment = new LoadingFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,startFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_map,startFragment).commit();
         Log.w("Test", "Fragment Started");
     }
 
@@ -78,43 +92,16 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
 
     @Override
     public void update(Observable observable, Object data) {
-        Object[] objects = ((GetAndSetObjectsRunnable)observable).getObjects();
-
+        Log.w("Test", "Activity Noted");
+        Object[] objects = ((ObservableRunnable<Object[]>)observable).getData();
+/*
         overheadMap = getBitmap((byte[])objects[0]);
         floorMap = getBitmap((byte[])objects[1]);
         goalFloor = (int)objects[2];
         maxFloor = (int)objects[3];
-
-        BuildingFragment startFragment = new BuildingFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,startFragment).commit();
-    }
-
-    private class GetAndSetObjectsRunnable extends Observable implements Runnable {
-
-        private Object[] objects = new Object[4];
-        private boolean isRoomSearch;
-        private String
-            searchTerm,
-            chosenComplex;
-
-        public GetAndSetObjectsRunnable(boolean isRoomSearch, String searchTerm, String choosenComplex) {
-            this.isRoomSearch = isRoomSearch;
-            this.searchTerm = searchTerm;
-            this.chosenComplex = choosenComplex;
-        }
-        @Override
-        public void run() {
-            if(isRoomSearch) {
-                objects = server.searchRoom(searchTerm,chosenComplex);
-                setChanged();
-                notifyObservers();
-                Log.w("Test", "Observers Notified");
-            }
-        }
-
-        public Object[] getObjects() {
-           return objects;
-        }
-
+*/
+        BuildingFragment newFragment = new BuildingFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map,newFragment).commit();
+        Log.w("Test", "Building Fragment Started");
     }
 }
