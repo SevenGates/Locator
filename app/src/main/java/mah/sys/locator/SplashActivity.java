@@ -4,16 +4,25 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import java.util.Observable;
+import java.util.Observer;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
-public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class SplashActivity extends AppCompatActivity implements View.OnClickListener, Observer {
 
     private Button btnChoose;
     private DelayAutoCompleteTextView searchField;
     private ServerCommunicator server;
+
+    private TransparentProgressDialog loading;
+    private Runnable runnable;
 
 
     @Override
@@ -29,6 +38,14 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             startActivity(new Intent(this,SearchActivity.class));
         }
     */
+        loading = new TransparentProgressDialog(this);
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if(loading.isShowing())
+                    loading.dismiss();
+            }
+        };
 
         server = new ServerCommunicator();
 
@@ -54,21 +71,38 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
+    public void update(Observable observable, Object data) {
+        loading.dismiss();
+        boolean confirmed = ((ObservableRunnable<Boolean>)observable).getData();
+        if(confirmed) {
+            SharedPreferences settings = getSharedPreferences("mypref",0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("choosenComplex", searchField.getText().toString());
+            editor.commit();
+
+            // Byta aktivitet.
+            startActivity(new Intent(this, SearchActivity.class));
+        } else {
+            //TODO: FIX ERROR MSG
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == btnChoose) {
             // Konfirmera valet med server.
-            String text = searchField.getText().toString();
-            if(server.confirmComplex(text)) {
-                SharedPreferences settings = getSharedPreferences("mypref",0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString("choosenComplex", text);
-                editor.commit();
-
-                // Byta aktivitet.
-                startActivity(new Intent(this, SearchActivity.class));
-            } else {
-                //TODO: FIX ERROR MSG
-            }
+            final String text = searchField.getText().toString();
+            loading.show();
+            ObservableRunnable<Boolean> runnable = new ObservableRunnable<Boolean>() {
+                @Override
+                public void run() {
+                    data = server.confirmComplex(text);
+                    setChanged();
+                    notifyObservers();
+                }
+            };
+            runnable.addObserver(this);
+            new Thread(runnable).start();
         }
     }
 }

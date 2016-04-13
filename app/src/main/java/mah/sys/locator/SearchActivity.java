@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnChangePlace = (Button)findViewById(R.id.buttonChangePlace);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
 
-        // Lägg till blickListener.
+        // Lägg till clickListener.
         btnSearchProg.setOnClickListener(this);
         btnSearchRoom.setOnClickListener(this);
         btnChangePlace.setOnClickListener(this);
