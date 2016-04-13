@@ -28,12 +28,20 @@ import java.util.concurrent.Future;
  */
 public class ServerCommunicator {
 
-    private static final String GET_COMPLEX = "GCO,",
+    public ServerCommunicator() {
+
+    }
+
+    private static final String
+            IP_ADDRESS = "81.227.253.254",
+            GET_COMPLEX = "GCO,",
             CONFIRM_COMPLEX = "CNF,",
             SEARCH_ROOM = "SER,",
             SEARCH_PROGRAM = "SEP,";
+    private static final int
+            PORT = 8080;
 
-    public static List<String> getComplexes() {
+    public List<String> getComplexes() {
         List<String> list = new ArrayList<String>();
         list.add("Malmö Högskola");
         list.add("Lunds Universitet");
@@ -45,7 +53,7 @@ public class ServerCommunicator {
         /*List<String> strings = new ArrayList<String>();
         try {
             // Skapa socket.
-            Socket socket = new Socket("81.227.253.254", 8080);
+            Socket socket = new Socket(IP_ADDRESS, PORT);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -74,13 +82,13 @@ public class ServerCommunicator {
         return confirm;*/
     }
 
-    public static boolean confirmComplex(String text) {
+    public boolean confirmComplex(String text) {
         return true;
         /*
         boolean confirm = false;
         try {
             // Skapa socket.
-            Socket socket = new Socket("81.227.253.254", 8080);
+            Socket socket = new Socket(IP_ADDRESS, PORT);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -106,11 +114,11 @@ public class ServerCommunicator {
         */
     }
 
-    public static Object[] searchRoom(final String searchTerm, final String choosenComplex) {
+    public Object[] searchRoom(final String searchTerm, final String choosenComplex) {
         Object[] objects = new Object[4];
         try {
             // Skapa socket.
-            Socket socket = new Socket("81.227.253.254", 8080);
+            Socket socket = new Socket(IP_ADDRESS, PORT);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));

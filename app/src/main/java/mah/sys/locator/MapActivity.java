@@ -21,6 +21,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     private int
         goalFloor,
         maxFloor;
+    private ServerCommunicator server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,8 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         setContentView(R.layout.activity_map);
 
         Log.w("Test", "Activity Started");
+
+        server = new ServerCommunicator();
 
         // Få variabler från Intent.
         Intent intent = getIntent();
@@ -102,7 +105,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         @Override
         public void run() {
             if(isRoomSearch) {
-                objects = ServerCommunicator.searchRoom(searchTerm,chosenComplex);
+                objects = server.searchRoom(searchTerm,chosenComplex);
                 setChanged();
                 notifyObservers();
                 Log.w("Test", "Observers Notified");

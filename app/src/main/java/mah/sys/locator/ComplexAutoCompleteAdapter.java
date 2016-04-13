@@ -21,7 +21,10 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
     private Context mContext;
     private List<String> complexList = new ArrayList<String>();
 
-    public ComplexAutoCompleteAdapter(Context context) {
+    //TODO: Bryta ut serverkommunikation?
+    private ServerCommunicator mServer;
+    public ComplexAutoCompleteAdapter(Context context, ServerCommunicator server) {
+        mServer = server;
         mContext = context;
     }
 
@@ -79,7 +82,7 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
     }
 
     private List<String> findComplexes(Context context, String searchString) {
-        List<String> list = ServerCommunicator.getComplexes();
+        List<String> list = mServer.getComplexes();
         List<String> filteredList = new ArrayList<String>();
         for (String S: list)
             if(S.substring(0,searchString.length()).toLowerCase().equals(searchString.toLowerCase()))

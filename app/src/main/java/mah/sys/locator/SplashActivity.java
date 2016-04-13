@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnChoose;
-    DelayAutoCompleteTextView searchField;
+    private Button btnChoose;
+    private DelayAutoCompleteTextView searchField;
+    private ServerCommunicator server;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             startActivity(new Intent(this,SearchActivity.class));
         }
     */
+
+        server = new ServerCommunicator();
+
         // Ladda Knapp.
         btnChoose = (Button)findViewById(R.id.buttonChoose);
         btnChoose.setOnClickListener(this);
@@ -33,7 +39,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         // Ladda sökfält.
         searchField = (DelayAutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         searchField.setThreshold(2);
-        searchField.setAdapter(new ComplexAutoCompleteAdapter(this));
+        searchField.setAdapter(new ComplexAutoCompleteAdapter(this, server));
         searchField.setLoadingIndicator(
                 (android.widget.ProgressBar) findViewById(R.id.pb_loading_indicator));
 
@@ -52,8 +58,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         if (v == btnChoose) {
             // Konfirmera valet med server.
             String text = searchField.getText().toString();
-            if(ServerCommunicator.confirmComplex(text)) {
-                // Spara valet på mobilen.
+            if(server.confirmComplex(text)) {
                 SharedPreferences settings = getSharedPreferences("mypref",0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString("choosenComplex", text);
