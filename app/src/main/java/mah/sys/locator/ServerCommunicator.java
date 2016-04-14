@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -142,19 +143,17 @@ public class ServerCommunicator {
             output.flush();
             Log.w("Test", "Message Sent");
 
-            Reader reader = new InputStreamReader(input);
-            JsonReader jsonReader = new JsonReader(reader);
+            Object obj = input.readObject();
 
-            jsonReader.beginObject();
-            while(jsonReader.hasNext()) {
-                Log.w("Test", "Read something!");
-            }
+            Log.w("Test", obj.toString());
 
             // Stäng socket.
             socket.close();
 
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
