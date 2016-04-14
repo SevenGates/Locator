@@ -3,7 +3,10 @@ package mah.sys.locator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Editable;
+import android.util.JsonReader;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,6 +14,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.Reader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,15 +47,20 @@ public class ServerCommunicator {
     private static final int
             PORT = 8080;
 
-    public List<String> getComplexes() {
-        List<String> list = new ArrayList<String>();
+    public List<String> getComplexes(String text) {
+        List<String> list = new ArrayList<>();
         list.add("Malmö Högskola");
         list.add("Lunds Universitet");
         list.add("Malmö Akutmottagningen");
         list.add("Malmö Arena");
         list.add("Malmgruvan i Kiruna");
         list.add("Halmö Stadsbibliotek");
-        return list;
+        List<String> filteredList = new ArrayList<>();
+        for (String S: list)
+            if(S.substring(0,text.length()).toLowerCase().equals(text.toLowerCase()))
+                filteredList.add(S);
+        return filteredList;
+
         /*List<String> strings = new ArrayList<String>();
         try {
             // Skapa socket.
@@ -60,7 +71,7 @@ public class ServerCommunicator {
             DataInputStream input = new DataInputStream(socket.getInputStream());
 
             // Skicka servern ett meddelande.
-            output.writeUTF(GET_COMPLEX);
+            output.writeUTF(GET_COMPLEX + text);
             output.flush();
 
             Log.w("Test", "Message Sent");
@@ -115,52 +126,29 @@ public class ServerCommunicator {
     }
 
     public Object[] searchRoom(final String searchTerm, final String choosenComplex) {
-        Object[] objects = new Object[4];/*
+        Object[] objects = new Object[5];
+        Log.w("Test", searchTerm);
+        Log.w("Test", choosenComplex);
         try {
             // Skapa socket.
             Socket socket = new Socket(IP_ADDRESS, PORT);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            DataInputStream input = new DataInputStream(socket.getInputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
             // Skicka servern ett meddelande.
             output.writeUTF(SEARCH_ROOM + searchTerm + "," + choosenComplex);
             output.flush();
-
             Log.w("Test", "Message Sent");
 
-            // Skapa hjälpvariabler
-            int arrayLength;
-            byte[] bytes;
+            Reader reader = new InputStreamReader(input);
+            JsonReader jsonReader = new JsonReader(reader);
 
-            // Första bitmapen
-            arrayLength = input.readInt();
-            bytes = new byte[arrayLength];
-            if (arrayLength > 0)
-                input.readFully(bytes);
-            objects[0] = bytes;
-
-            Log.w("Test", "Första Bitmap läst");
-
-            // Andra bitmapen
-            arrayLength = input.readInt();
-            bytes = new byte[arrayLength];
-            if (arrayLength > 0)
-                input.readFully(bytes);
-            objects[1] = bytes;
-
-            Log.w("Test", "Andra Bitmap läst");
-
-            // Mål våning
-            objects[2] = input.readInt();
-
-            Log.w("Test", "Första int läst");
-
-            // Max våningar
-            objects[3] = input.readInt();
-
-            Log.w("Test", "Andra int läst");
+            jsonReader.beginObject();
+            while(jsonReader.hasNext()) {
+                Log.w("Test", "Read something!");
+            }
 
             // Stäng socket.
             socket.close();
@@ -169,7 +157,7 @@ public class ServerCommunicator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
+
         return objects;
     }
 }

@@ -1,7 +1,5 @@
 package mah.sys.locator;
 
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,21 +7,37 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+
 import java.util.Observable;
 import java.util.Observer;
+
 import mah.sys.locator.fragments.BuildingFragment;
 import mah.sys.locator.fragments.LoadingFragment;
+import mah.sys.locator.fragments.RoomFragment;
 
-public class MapActivity extends FragmentActivity implements Observer, BuildingFragment.BuildingFragmentCommunicator {
+public class MapActivity extends FragmentActivity implements Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator {
 
     // Variabler från sökning.
     private Bitmap
-        overheadMap,
-        floorMap;
+            overheadMap,
+            floorMap;
     private int
-        goalFloor,
-        maxFloor;
+            goalFloor,
+            maxFloor;
+    private String buildingName;
+
     private ServerCommunicator server;
+
+    private FrameLayout fragmentContainer;
+    private Button
+            btnGoBack,
+            btnGoForward;
+    private TextView
+            txtTopGuide,
+            txtBottonGuide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +46,17 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
 
 
         Log.w("Test", "Activity Started");
+        if (savedInstanceState != null)
+            return;
 
+        // Skapa serverkommunikation
         server = new ServerCommunicator();
+
+        // Hämta views
+        btnGoBack = (Button) findViewById(R.id.btnGuideBack);
+        btnGoForward = (Button) findViewById(R.id.btnGuideForward);
+        txtTopGuide = (TextView) findViewById(R.id.txtGuideStep);
+        txtBottonGuide = (TextView) findViewById(R.id.txtGuideDesc);
 
         // Få variabler från Intent.
         Intent intent = getIntent();
@@ -47,8 +70,8 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         ObservableRunnable<Object[]> runnable = new ObservableRunnable<Object[]>() {
             @Override
             public void run() {
-                if(isRoomSearch) {
-                    data = server.searchRoom(searchTerm,chosenComplex);
+                if (isRoomSearch) {
+                    data = server.searchRoom(searchTerm, chosenComplex);
                     setChanged();
                     notifyObservers();
                     Log.w("Test", "Observers Notified MapActiviy");
@@ -56,13 +79,10 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
             }
         };
 
-        if(savedInstanceState != null)
-            return;
-
         runnable.addObserver(this);
         new Thread(runnable).start();
         LoadingFragment startFragment = new LoadingFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_map,startFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_map, startFragment).commit();
         Log.w("Test", "Fragment Started");
     }
 
@@ -74,34 +94,53 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     }
 
     @Override
-    public Bitmap fetchOverheadMap() {
+    public Bitmap getOverheadMap() {
         return overheadMap;
+    }
+
+    @Override
+    public String getBuildingName() {
+        return buildingName;
+    }
+
+    @Override
+    public void setIntructions(String top, String bottom) {
+        txtTopGuide.setText(top);
+        txtBottonGuide.setText(bottom);
     }
 
     public Bitmap getFloorMap() {
         return floorMap;
     }
 
-    public int getGoalFloor() {
-        return goalFloor;
+    @Override
+    public double getRoomCoords() {
+        return 0.0;
     }
 
-    public int getMaxFloor() {
-        return maxFloor;
+    @Override
+    public double getDoorCoords() {
+        return 0;
+    }
+
+    @Override
+    public double getCorridorCoords() {
+        return 0;
     }
 
     @Override
     public void update(Observable observable, Object data) {
         Log.w("Test", "Activity Noted");
-        Object[] objects = ((ObservableRunnable<Object[]>)observable).getData();
-/*
-        overheadMap = getBitmap((byte[])objects[0]);
-        floorMap = getBitmap((byte[])objects[1]);
-        goalFloor = (int)objects[2];
-        maxFloor = (int)objects[3];
-*/
+        Object[] objects = ((ObservableRunnable<Object[]>) observable).getData();
+
+        overheadMap = getBitmap((byte[]) objects[0]);
+        floorMap = getBitmap((byte[]) objects[1]);
+        goalFloor = (int) objects[2];
+        maxFloor = (int) objects[3];
+        buildingName = (String) objects[4];
+
         BuildingFragment newFragment = new BuildingFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map,newFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, newFragment).commit();
         Log.w("Test", "Building Fragment Started");
     }
 }

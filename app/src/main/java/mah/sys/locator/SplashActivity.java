@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Handler;
@@ -56,7 +57,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         // Ladda sökfält.
         searchField = (DelayAutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         searchField.setThreshold(2);
-        searchField.setAdapter(new ComplexAutoCompleteAdapter(this, server));
+        searchField.setAdapter(new ComplexAutoCompleteAdapter(this));
         searchField.setLoadingIndicator(
                 (android.widget.ProgressBar) findViewById(R.id.pb_loading_indicator));
 
@@ -77,8 +78,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         if(confirmed) {
             SharedPreferences settings = getSharedPreferences("mypref",0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString("choosenComplex", searchField.getText().toString());
+            editor.putString("chosenComplex", searchField.getText().toString());
             editor.commit();
+            Log.w("Test", searchField.getText().toString() + " stored!");
 
             // Byta aktivitet.
             startActivity(new Intent(this, SearchActivity.class));
@@ -104,5 +106,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             runnable.addObserver(this);
             new Thread(runnable).start();
         }
+    }
+
+    public List<String> getComplexes(String searchString) {
+        return server.getComplexes(searchString);
     }
 }

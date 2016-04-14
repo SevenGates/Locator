@@ -21,10 +21,7 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
     private Context mContext;
     private List<String> complexList = new ArrayList<String>();
 
-    //TODO: Bryta ut serverkommunikation?
-    private ServerCommunicator mServer;
-    public ComplexAutoCompleteAdapter(Context context, ServerCommunicator server) {
-        mServer = server;
+    public ComplexAutoCompleteAdapter(Context context) {
         mContext = context;
     }
 
@@ -61,7 +58,7 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
                 if(constraint != null) {
-                    List<String> complexes = findComplexes(mContext,constraint.toString());
+                    List<String> complexes = ((SplashActivity)mContext).getComplexes(constraint.toString());
 
                     filterResults.values = complexes;
                     filterResults.count = complexes.size();
@@ -79,14 +76,5 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
                 }
             }};
         return filter;
-    }
-
-    private List<String> findComplexes(Context context, String searchString) {
-        List<String> list = mServer.getComplexes();
-        List<String> filteredList = new ArrayList<String>();
-        for (String S: list)
-            if(S.substring(0,searchString.length()).toLowerCase().equals(searchString.toLowerCase()))
-                filteredList.add(S);
-        return filteredList;
     }
 }

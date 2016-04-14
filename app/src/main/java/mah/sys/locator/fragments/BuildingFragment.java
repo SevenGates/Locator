@@ -1,6 +1,5 @@
 package mah.sys.locator.fragments;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import mah.sys.locator.FragmentCommunicator;
 import mah.sys.locator.R;
 
 /**
@@ -18,22 +19,35 @@ public class BuildingFragment extends Fragment {
 
     // Skapa variabler
     private ImageView mapView;
-    private Activity activity;
+    private BuildingFragmentCommunicator callback;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.w("Test", "View Infalated");
-        return inflater.inflate(R.layout.building_layout,container,false);
+        return inflater.inflate(R.layout.building_layout, container, false);
     }
 
     @Override
-    public void onViewStateRestored (Bundle savedInstanceState) {
+    public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        Log.w("Test", "ViewStateRestored");
-        mapView = (ImageView)getView().findViewById(R.id.imageViewMap);
-        activity = getActivity();
+        try {
+            callback = (BuildingFragmentCommunicator) getActivity();
+        } catch (ClassCastException e) {
+            Log.w("Test", getActivity().toString() + " måste ärva BuildingFragmentCommunicator");
+        }
+
+        mapView = (ImageView) getView().findViewById(R.id.imageViewMap);
+        Bitmap image = callback.getOverheadMap();
+        mapView.setImageBitmap(image);
+        String
+            buildingName = callback.getBuildingName(),
+            topText = getResources().getString(R.string.guide_building_top),
+            bottomText = getResources().getString(R.string.guide_building_bottom) +  buildingName;
+        callback.setIntructions(topText,bottomText);
     }
 
-    public interface BuildingFragmentCommunicator {
-        Bitmap fetchOverheadMap();
+    public interface BuildingFragmentCommunicator extends FragmentCommunicator {
+        Bitmap getOverheadMap();
+        String getBuildingName();
     }
 }
