@@ -156,16 +156,6 @@ public class ServerCommunicator {
             objects.put("DoorCoor",json.getString("doorCoor"));
             objects.put("CorridorCoor",json.getString("corridorCoor"));
 
-            Log.w("Test", objects.get("Name"));
-            Log.w("Test", objects.get("Overhead"));
-            Log.w("Test", objects.get("MaxFloors"));
-            Log.w("Test", objects.get("GoalFloor"));
-            Log.w("Test", objects.get("FloorMap"));
-            Log.w("Test", objects.get("RoomId"));
-            Log.w("Test", objects.get("RoomCoor"));
-            Log.w("Test", objects.get("DoorCoor"));
-            Log.w("Test", objects.get("CorridorCoor"));
-
             // Stäng socket.
             socket.close();
 
