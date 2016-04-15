@@ -3,7 +3,11 @@ package mah.sys.locator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Editable;
+import android.util.JsonReader;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -11,11 +15,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.Reader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -41,15 +49,20 @@ public class ServerCommunicator {
     private static final int
             PORT = 8080;
 
-    public List<String> getComplexes() {
-        List<String> list = new ArrayList<String>();
+    public List<String> getComplexes(String text) {
+        List<String> list = new ArrayList<>();
         list.add("Malmö Högskola");
         list.add("Lunds Universitet");
         list.add("Malmö Akutmottagningen");
         list.add("Malmö Arena");
         list.add("Malmgruvan i Kiruna");
         list.add("Halmö Stadsbibliotek");
-        return list;
+        List<String> filteredList = new ArrayList<>();
+        for (String S: list)
+            if(S.substring(0,text.length()).toLowerCase().equals(text.toLowerCase()))
+                filteredList.add(S);
+        return filteredList;
+
         /*List<String> strings = new ArrayList<String>();
         try {
             // Skapa socket.
@@ -60,7 +73,7 @@ public class ServerCommunicator {
             DataInputStream input = new DataInputStream(socket.getInputStream());
 
             // Skicka servern ett meddelande.
-            output.writeUTF(GET_COMPLEX);
+            output.writeUTF(GET_COMPLEX + text);
             output.flush();
 
             Log.w("Test", "Message Sent");
@@ -114,62 +127,43 @@ public class ServerCommunicator {
         */
     }
 
-    public Object[] searchRoom(final String searchTerm, final String choosenComplex) {
-        Object[] objects = new Object[4];/*
+    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) {
+        HashMap<String,String> objects = new HashMap<>();
         try {
             // Skapa socket.
             Socket socket = new Socket(IP_ADDRESS, PORT);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            DataInputStream input = new DataInputStream(socket.getInputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
             // Skicka servern ett meddelande.
             output.writeUTF(SEARCH_ROOM + searchTerm + "," + choosenComplex);
             output.flush();
-
             Log.w("Test", "Message Sent");
 
-            // Skapa hjälpvariabler
-            int arrayLength;
-            byte[] bytes;
+            Object obj = input.readObject();
 
-            // Första bitmapen
-            arrayLength = input.readInt();
-            bytes = new byte[arrayLength];
-            if (arrayLength > 0)
-                input.readFully(bytes);
-            objects[0] = bytes;
+            JSONObject json = new JSONObject(obj.toString());
 
-            Log.w("Test", "Första Bitmap läst");
-
-            // Andra bitmapen
-            arrayLength = input.readInt();
-            bytes = new byte[arrayLength];
-            if (arrayLength > 0)
-                input.readFully(bytes);
-            objects[1] = bytes;
-
-            Log.w("Test", "Andra Bitmap läst");
-
-            // Mål våning
-            objects[2] = input.readInt();
-
-            Log.w("Test", "Första int läst");
-
-            // Max våningar
-            objects[3] = input.readInt();
-
-            Log.w("Test", "Andra int läst");
+            objects.put("Name",json.getString("name"));
+            objects.put("Overhead",json.getString("path"));
+            objects.put("MaxFloors",json.getString("floors"));
+            objects.put("GoalFloor",json.getString("id"));
+            objects.put("FloorMap",json.getString("map"));
+            objects.put("RoomId",json.getString("roomid"));
+            objects.put("RoomCoor",json.getString("roomCoor"));
+            objects.put("DoorCoor",json.getString("doorCoor"));
+            objects.put("CorridorCoor",json.getString("corridorCoor"));
 
             // Stäng socket.
             socket.close();
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | JSONException | ClassNotFoundException e) {
+            Log.w("Exception", e.toString());
         }
-*/
+
         return objects;
     }
 }
