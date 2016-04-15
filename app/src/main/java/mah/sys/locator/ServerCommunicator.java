@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.util.JsonReader;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
@@ -126,10 +127,8 @@ public class ServerCommunicator {
         */
     }
 
-    public Object[] searchRoom(final String searchTerm, final String choosenComplex) {
-        Object[] objects = new Object[5];
-        Log.w("Test", searchTerm);
-        Log.w("Test", choosenComplex);
+    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) {
+        HashMap<String,String> objects = new HashMap<>();
         try {
             // Skapa socket.
             Socket socket = new Socket(IP_ADDRESS, PORT);
@@ -145,16 +144,34 @@ public class ServerCommunicator {
 
             Object obj = input.readObject();
 
-            Log.w("Test", obj.toString());
+            JSONObject json = new JSONObject(obj.toString());
+
+            objects.put("Name",json.getString("name"));
+            objects.put("Overhead",json.getString("path"));
+            objects.put("MaxFloors",json.getString("floors"));
+            objects.put("GoalFloor",json.getString("id"));
+            objects.put("FloorMap",json.getString("map"));
+            objects.put("RoomId",json.getString("roomid"));
+            objects.put("RoomCoor",json.getString("roomCoor"));
+            objects.put("DoorCoor",json.getString("doorCoor"));
+            objects.put("CorridorCoor",json.getString("corridorCoor"));
+
+            Log.w("Test", objects.get("Name"));
+            Log.w("Test", objects.get("Overhead"));
+            Log.w("Test", objects.get("MaxFloors"));
+            Log.w("Test", objects.get("GoalFloor"));
+            Log.w("Test", objects.get("FloorMap"));
+            Log.w("Test", objects.get("RoomId"));
+            Log.w("Test", objects.get("RoomCoor"));
+            Log.w("Test", objects.get("DoorCoor"));
+            Log.w("Test", objects.get("CorridorCoor"));
 
             // Stäng socket.
             socket.close();
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException | JSONException | ClassNotFoundException e) {
+            Log.w("Exception", e.toString());
         }
 
         return objects;

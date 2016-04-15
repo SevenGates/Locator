@@ -6,11 +6,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,7 +29,14 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     private int
             goalFloor,
             maxFloor;
-    private String buildingName;
+    private double
+            roomCoords,
+            doorCoords,
+            corridorCoords;
+
+    private String
+            buildingName,
+            roomName;
 
     private ServerCommunicator server;
 
@@ -67,7 +76,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         SharedPreferences settings = getSharedPreferences("mypref", 0);
         final String chosenComplex = settings.getString("chosenComplex", null);
 
-        ObservableRunnable<Object[]> runnable = new ObservableRunnable<Object[]>() {
+        ObservableRunnable<HashMap<String,String>> runnable = new ObservableRunnable<HashMap<String,String>>() {
             @Override
             public void run() {
                 if (isRoomSearch) {
@@ -131,13 +140,21 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     @Override
     public void update(Observable observable, Object data) {
         Log.w("Test", "Activity Noted");
-        Object[] objects = ((ObservableRunnable<Object[]>) observable).getData();
+        HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
 
-        overheadMap = getBitmap((byte[]) objects[0]);
-        floorMap = getBitmap((byte[]) objects[1]);
-        goalFloor = (int) objects[2];
-        maxFloor = (int) objects[3];
-        buildingName = (String) objects[4];
+        goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
+        maxFloor = Integer.valueOf(objects.get("MaxFloors"));
+        roomCoords = Double.valueOf(objects.get("RoomCoor"));
+        doorCoords = Double.valueOf(objects.get("DoorCoor"));
+        corridorCoords = Double.valueOf(objects.get("CorridorCoor"));
+        buildingName = objects.get("Name");
+        roomName = objects.get("roomId");
+
+        byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);
+        overheadMap = getBitmap(overheadBytes);
+
+        byte[] floorMaps = Base64.decode(objects.get("FloorMap"), Base64.DEFAULT);
+        floorMap = getBitmap(floorMaps);
 
         BuildingFragment newFragment = new BuildingFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, newFragment).commit();
