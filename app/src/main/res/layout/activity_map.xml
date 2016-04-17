@@ -64,7 +64,8 @@
             android:id="@+id/btnGuideForward"
             android:layout_below="@+id/txtGuideDesc"
             android:layout_alignLeft="@id/strut"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:enabled="false"/>
     </RelativeLayout>
 
 </LinearLayout>

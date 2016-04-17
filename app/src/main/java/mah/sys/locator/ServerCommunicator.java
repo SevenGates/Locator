@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Reader;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class ServerCommunicator {
     private static final int
             PORT = 8080;
 
-    public List<String> getComplexes(String text) {
+    public List<String> getComplexes(String text) throws IOException {
         List<String> list = new ArrayList<>();
         list.add("Malmö Högskola");
         list.add("Lunds Universitet");
@@ -64,70 +65,58 @@ public class ServerCommunicator {
         return filteredList;
 
         /*List<String> strings = new ArrayList<String>();
-        try {
-            // Skapa socket.
-            Socket socket = new Socket(IP_ADDRESS, PORT);
+        // Skapa socket.
+        Socket socket = new Socket(IP_ADDRESS, PORT);
 
-            // Sätt strömmarna.
-            DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            DataInputStream input = new DataInputStream(socket.getInputStream());
+        // Sätt strömmarna.
+        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        DataInputStream input = new DataInputStream(socket.getInputStream());
 
-            // Skicka servern ett meddelande.
-            output.writeUTF(GET_COMPLEX + text);
-            output.flush();
+        // Skicka servern ett meddelande.
+        output.writeUTF(GET_COMPLEX + text);
+        output.flush();
 
-            Log.w("Test", "Message Sent");
+        Log.w("Test", "Message Sent");
 
-            int nrOfEntries = input.readInt();
-            String complex;
-            for (int i = 0; i < nrOfEntries; i++) {
-                complex = input.readUTF();
-                strings.add(complex);
-            }
-            // Stäng socket.
-            socket.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        int nrOfEntries = input.readInt();
+        String complex;
+        for (int i = 0; i < nrOfEntries; i++) {
+            complex = input.readUTF();
+            strings.add(complex);
         }
+        // Stäng socket.
+        socket.close();
 
         return confirm;*/
     }
 
-    public boolean confirmComplex(String text) {
+    public boolean confirmComplex(String text) throws IOException {
         return true;
         /*
         boolean confirm = false;
-        try {
-            // Skapa socket.
-            Socket socket = new Socket(IP_ADDRESS, PORT);
+        // Skapa socket.
+        Socket socket = new Socket(IP_ADDRESS, PORT);
 
-            // Sätt strömmarna.
-            DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-            DataInputStream input = new DataInputStream(socket.getInputStream());
+        // Sätt strömmarna.
+        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        DataInputStream input = new DataInputStream(socket.getInputStream());
 
-            // Skicka servern ett meddelande.
-            output.writeUTF(CONFIRM_COMPLEX + text);
-            output.flush();
+        // Skicka servern ett meddelande.
+        output.writeUTF(CONFIRM_COMPLEX + text);
+        output.flush();
 
-            Log.w("Test", "Message Sent");
+        Log.w("Test", "Message Sent");
 
-            confirm = input.readBoolean();
+        confirm = input.readBoolean();
 
-            // Stäng socket.
-            socket.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Stäng socket.
+        socket.close();
 
         return confirm;
         */
     }
 
-    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) {
+    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException {
         HashMap<String,String> objects = new HashMap<>();
         try {
             // Skapa socket.
@@ -160,7 +149,7 @@ public class ServerCommunicator {
             socket.close();
 
 
-        } catch (IOException | JSONException | ClassNotFoundException e) {
+        } catch (JSONException | ClassNotFoundException e) {
             Log.w("Exception", e.toString());
         }
 

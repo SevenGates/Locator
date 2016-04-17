@@ -42,7 +42,7 @@ public class BuildingFragment extends Fragment {
         String
             buildingName = callback.getBuildingName(),
             topText = getResources().getString(R.string.guide_building_top),
-            bottomText = getResources().getString(R.string.guide_building_bottom) +  buildingName;
+            bottomText = getResources().getString(R.string.guide_building_bottom) + " " +  buildingName;
         callback.setIntructions(topText,bottomText);
     }
 

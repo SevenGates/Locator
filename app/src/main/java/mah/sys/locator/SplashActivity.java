@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 
+import java.io.IOException;
+import java.net.ConnectException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -98,7 +100,12 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             ObservableRunnable<Boolean> runnable = new ObservableRunnable<Boolean>() {
                 @Override
                 public void run() {
-                    data = server.confirmComplex(text);
+                    try {
+                        data = server.confirmComplex(text);
+                    } catch (IOException e) {
+                        Log.w("Test", "Connection Error!");
+                        // TODO: Error msg, måste fixas i activity, inte från tråden.
+                    }
                     setChanged();
                     notifyObservers();
                 }
@@ -109,6 +116,13 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public List<String> getComplexes(String searchString) {
-        return server.getComplexes(searchString);
+        List<String> strings = null;
+        try {
+            strings = server.getComplexes(searchString);
+        } catch (IOException e) {
+            Log.w("Test", "Connection Error!");
+            // TODO: Error msg
+        }
+        return strings;
     }
 }
