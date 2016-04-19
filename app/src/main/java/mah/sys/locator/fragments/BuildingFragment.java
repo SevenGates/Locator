@@ -44,6 +44,7 @@ public class BuildingFragment extends Fragment {
             topText = getResources().getString(R.string.guide_building_top),
             bottomText = getResources().getString(R.string.guide_building_bottom) + " " +  buildingName;
         callback.setIntructions(topText,bottomText);
+        Log.w("Test", "View State Restored");
     }
 
     public interface BuildingFragmentCommunicator extends FragmentCommunicator {

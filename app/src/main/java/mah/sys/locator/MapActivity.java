@@ -111,10 +111,6 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         runnable.addObserver(this);
         new Thread(runnable).start();
 
-        setLoading();
-    }
-
-    private void setLoading() {
         // Stäng av frammåtknappen under laddningen.
         btnGoBack.setEnabled(true);
         btnGoForward.setEnabled(false);
@@ -193,7 +189,6 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     public void update(Observable observable, Object data) {
         Log.w("Test", "Activity Noted");
         HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
-
         // Hämta alla variabler från Hashmapen.
         goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
         maxFloor = Integer.valueOf(objects.get("MaxFloors"));
@@ -209,10 +204,14 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
 
         byte[] floorMaps = Base64.decode(objects.get("FloorMap"), Base64.DEFAULT);
         floorMap = getBitmap(floorMaps);
-
         // Starta den första fragmenten.
         switchFragment(currentFragmentIndex);
-        btnGoForward.setEnabled(true);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnGoForward.setEnabled(true);
+            }
+        });
 
         Log.w("Test", "Building Fragment Started");
     }
