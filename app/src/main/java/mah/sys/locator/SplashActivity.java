@@ -10,12 +10,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener, Observer {
@@ -25,7 +22,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private ServerCommunicator server;
 
     private TransparentProgressDialog loading;
-    private Runnable runnable;
 
 
     @Override
@@ -42,13 +38,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         }
     */
         loading = new TransparentProgressDialog(this);
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                if(loading.isShowing())
-                    loading.dismiss();
-            }
-        };
 
         server = new ServerCommunicator();
 
