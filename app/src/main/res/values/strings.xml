@@ -11,8 +11,12 @@
 
     <string name="guide_building_top">Steg 1 - Byggnad</string>
     <string name="guide_building_bottom">Gå till </string>
+    <string name="guide_level_top">Steg 2 - Våning</string>
+    <string name="guide_level_bottom">Gå till våning</string>
     <string name="guide_room_top">Steg 3 - Vägvisning</string>
     <string name="guide_room_bottom">Följ pilen till salen</string>
     <string name="arrowLeft">&lt;</string>
     <string name="arrowRight">&gt;</string>
+    <string name="btnText_cancel">Avbryt</string>
+    <string name="btnText_finish">Framme!</string>
 </resources>

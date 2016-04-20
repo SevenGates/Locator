@@ -9,22 +9,22 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
 import mah.sys.locator.fragments.BuildingFragment;
+import mah.sys.locator.fragments.LevelFragment;
 import mah.sys.locator.fragments.LoadingFragment;
 import mah.sys.locator.fragments.RoomFragment;
 
-public class MapActivity extends FragmentActivity implements Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, View.OnClickListener {
+public class MapActivity extends FragmentActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
     // Variabler från sökning.
     private Bitmap
@@ -44,15 +44,19 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
 
     private ServerCommunicator server;
 
-    private FrameLayout fragmentContainer;
     private Button
             btnGoBack,
             btnGoForward;
     private TextView
             txtTopGuide,
-            txtBottonGuide;
+            txtBottomGuide;
 
-    private final Fragment[] FRAGMENTS = { new BuildingFragment(), new RoomFragment()};
+    private final int MIN_SWIPE_DISTANCE = 200;
+    private float touchX1, touchX2;
+
+    private boolean loading = true;
+
+    private final Fragment[] FRAGMENTS = { new BuildingFragment(), new LevelFragment(), new RoomFragment()};
     private int currentFragmentIndex;
 
     @Override
@@ -75,7 +79,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
         btnGoBack = (Button) findViewById(R.id.btnGuideBack);
         btnGoForward = (Button) findViewById(R.id.btnGuideForward);
         txtTopGuide = (TextView) findViewById(R.id.txtGuideStep);
-        txtBottonGuide = (TextView) findViewById(R.id.txtGuideDesc);
+        txtBottomGuide = (TextView) findViewById(R.id.txtGuideDesc);
 
         // Sätt Listeners.
         btnGoBack.setOnClickListener(this);
@@ -141,7 +145,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
     @Override
     public void setIntructions(String top, String bottom) {
         txtTopGuide.setText(top);
-        txtBottonGuide.setText(bottom);
+        txtBottomGuide.setText(bottom);
     }
 
     public Bitmap getFloorMap() {
@@ -150,39 +154,102 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
 
     @Override
     public double getRoomCoords() {
-        return 0.0;
+        return roomCoords;
     }
 
     @Override
     public double getDoorCoords() {
-        return 0;
+        return doorCoords;
     }
 
     @Override
     public double getCorridorCoords() {
-        return 0;
+        return corridorCoords;
+    }
+
+    @Override
+    public int getMaxFloors() {
+        return maxFloor;
+    }
+
+    @Override
+    public int getGoalFloor() {
+        return goalFloor;
     }
 
     @Override
     public void onClick(View v) {
         if (v == btnGoBack) {
             if(currentFragmentIndex <= 0) {
-                //TODO: Cancel Search
+                startActivity(new Intent(this, SearchActivity.class));
             }
-            else
+            else {
                 switchFragment(--currentFragmentIndex);
+                updateButtonText();
+            }
         }
         else if (v == btnGoForward) {
             if(currentFragmentIndex >= FRAGMENTS.length - 1) {
-                //TODO: Finish Search
+                startActivity(new Intent(this, SearchActivity.class));
             }
-            else
+            else {
                 switchFragment(++currentFragmentIndex);
+                updateButtonText();
+            }
         }
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                touchX1 = event.getX();
+                Log.w("Test", "Down");
+                break;
+            case MotionEvent.ACTION_UP:
+                touchX2 = event.getX();
+                Log.w("Test", "Up");
+                float delta = touchX2 - touchX1;
+                if(Math.abs(delta) > MIN_SWIPE_DISTANCE) {
+                    if(loading)
+                        break;
+                    if(touchX2 > touchX1 && currentFragmentIndex > 0) {
+                        switchFragment(--currentFragmentIndex);
+                        updateButtonText();
+                    }
+                    else if(touchX1 > touchX2 && currentFragmentIndex < FRAGMENTS.length - 1) {
+                        switchFragment(++currentFragmentIndex);
+                        updateButtonText();
+                    }
+                }
+            break;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    private void updateButtonText() {
+        String
+            back = getResources().getString(R.string.arrowLeft),
+            forward = getResources().getString(R.string.arrowRight),
+            cancel = getResources().getString(R.string.btnText_cancel),
+            finish = getResources().getString(R.string.btnText_finish);
+
+        // Backbutton update
+        if(currentFragmentIndex == 0)
+            btnGoBack.setText(cancel);
+        else
+            btnGoBack.setText(back);
+
+        // Forwardbutton update
+        if(currentFragmentIndex == FRAGMENTS.length - 1)
+            btnGoForward.setText(finish);
+        else
+            btnGoForward.setText(forward);
+    }
+
     private void switchFragment(int newFragmentIndex) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, FRAGMENTS[newFragmentIndex]).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, FRAGMENTS[newFragmentIndex]).commit();
     }
 
     @Override
@@ -212,7 +279,7 @@ public class MapActivity extends FragmentActivity implements Observer, BuildingF
                 btnGoForward.setEnabled(true);
             }
         });
-
+        loading = false;
         Log.w("Test", "Building Fragment Started");
     }
 }
