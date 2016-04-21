@@ -44,11 +44,7 @@ public class RoomFragment extends Fragment {
                 bottomText = getResources().getString(R.string.guide_room_bottom);
         callback.setIntructions(topText,bottomText);
     }
-
-    public void onClick (){
-
-        if
-    }
+    
 
     public interface RoomFragmentCommunicator extends FragmentCommunicator {
         Bitmap getFloorMap();
