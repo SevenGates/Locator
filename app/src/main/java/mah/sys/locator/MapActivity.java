@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -32,11 +33,13 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
             floorMap;
     private int
             goalFloor,
-            maxFloor;
-    private double
-            roomCoords,
-            doorCoords,
-            corridorCoords;
+            maxFloor,
+            roomX,
+            roomY,
+            doorX,
+            doorY,
+            corridorX,
+            corridorY;
 
     private String
             buildingName,
@@ -153,18 +156,33 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
     }
 
     @Override
-    public double getRoomCoords() {
-        return roomCoords;
+    public int getRoomX() {
+        return roomX;
     }
 
     @Override
-    public double getDoorCoords() {
-        return doorCoords;
+    public int getRoomY() {
+        return roomY;
     }
 
     @Override
-    public double getCorridorCoords() {
-        return corridorCoords;
+    public int getDoorX() {
+        return doorX;
+    }
+
+    @Override
+    public int getDoorY() {
+        return doorY;
+    }
+
+    @Override
+    public int getCorridorX() {
+        return corridorX;
+    }
+
+    @Override
+    public int getCorridorY() {
+        return corridorY;
     }
 
     @Override
@@ -175,6 +193,43 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
     @Override
     public int getGoalFloor() {
         return goalFloor;
+    }
+
+    private void updateButtonText() {
+        String
+                back = getResources().getString(R.string.arrowLeft),
+                forward = getResources().getString(R.string.arrowRight),
+                cancel = getResources().getString(R.string.btnText_cancel),
+                finish = getResources().getString(R.string.btnText_finish);
+
+        // Backbutton update
+        if(currentFragmentIndex == 0)
+            btnGoBack.setText(cancel);
+        else
+            btnGoBack.setText(back);
+
+        // Forwardbutton update
+        if(currentFragmentIndex == FRAGMENTS.length - 1)
+            btnGoForward.setText(finish);
+        else
+            btnGoForward.setText(forward);
+    }
+
+    private void switchFragment(int newFragmentIndex) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, FRAGMENTS[newFragmentIndex]).commit();
+    }
+
+    private void markRoomOnBitMap() {
+        Bitmap image = floorMap.copy(floorMap.getConfig(),true);
+        int[] pixels = new int[image.getHeight() * image.getWidth()];
+
+        int width = image.getWidth(), height = image.getHeight();
+        image.getPixels(pixels, 0, width, 0, 0, width, height);
+        for (int i=(roomY-10)*width; i<width*roomY+10*width; i+=width)
+            for(int j = roomX-10; j<roomX+10; j++)
+                pixels[i+j] = Color.RED;
+        image.setPixels(pixels, 0, width, 0, 0, width, height);
+        floorMap = image;
     }
 
     @Override
@@ -228,30 +283,6 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         return super.onTouchEvent(event);
     }
 
-    private void updateButtonText() {
-        String
-            back = getResources().getString(R.string.arrowLeft),
-            forward = getResources().getString(R.string.arrowRight),
-            cancel = getResources().getString(R.string.btnText_cancel),
-            finish = getResources().getString(R.string.btnText_finish);
-
-        // Backbutton update
-        if(currentFragmentIndex == 0)
-            btnGoBack.setText(cancel);
-        else
-            btnGoBack.setText(back);
-
-        // Forwardbutton update
-        if(currentFragmentIndex == FRAGMENTS.length - 1)
-            btnGoForward.setText(finish);
-        else
-            btnGoForward.setText(forward);
-    }
-
-    private void switchFragment(int newFragmentIndex) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_map, FRAGMENTS[newFragmentIndex]).commit();
-    }
-
     @Override
     public void update(Observable observable, Object data) {
         Log.w("Test", "Activity Noted");
@@ -259,11 +290,27 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         // Hämta alla variabler från Hashmapen.
         goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
         maxFloor = Integer.valueOf(objects.get("MaxFloors"));
-        roomCoords = Double.valueOf(objects.get("RoomCoor"));
-        doorCoords = Double.valueOf(objects.get("DoorCoor"));
-        corridorCoords = Double.valueOf(objects.get("CorridorCoor"));
         buildingName = objects.get("Name");
         roomName = objects.get("roomId");
+
+        // Koordinater
+        String
+            roomCoords = objects.get("RoomCoor"),
+            doorCoords = objects.get("DoorCoor"),
+            corridorCoors = objects.get("CorridorCoor");
+        roomX = Integer.parseInt(roomCoords.split("\\.")[0]);
+        roomY = Integer.parseInt(roomCoords.split("\\.")[1]);
+        doorX = Integer.parseInt(doorCoords.split("\\.")[0]);
+        doorY = Integer.parseInt(doorCoords.split("\\.")[1]);
+        corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
+        corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
+
+        Log.w("Test", Integer.toString(roomX));
+        Log.w("Test", Integer.toString(roomY));
+        Log.w("Test", Integer.toString(doorX));
+        Log.w("Test", Integer.toString(doorY));
+        Log.w("Test", Integer.toString(corridorX));
+        Log.w("Test", Integer.toString(corridorY));
 
         // Hämta båda bilder och decodea dem till Bitmaps
         byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);
@@ -271,6 +318,9 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
 
         byte[] floorMaps = Base64.decode(objects.get("FloorMap"), Base64.DEFAULT);
         floorMap = getBitmap(floorMaps);
+
+        markRoomOnBitMap();
+
         // Starta den första fragmenten.
         switchFragment(currentFragmentIndex);
         runOnUiThread(new Runnable() {
