@@ -38,6 +38,7 @@ public class RoomFragment extends Fragment {
 
         imgViewRoomMap = (ImageView) getView().findViewById(R.id.imgViewRoomMap);
         Bitmap image = callback.getFloorMap();
+
         imgViewRoomMap.setImageBitmap(image);
         String
                 topText = getResources().getString(R.string.guide_room_top),
@@ -47,8 +48,11 @@ public class RoomFragment extends Fragment {
 
     public interface RoomFragmentCommunicator extends FragmentCommunicator {
         Bitmap getFloorMap();
-        double getRoomCoords();
-        double getDoorCoords();
-        double getCorridorCoords();
+        int getRoomX();
+        int getRoomY();
+        int getDoorX();
+        int getDoorY();
+        int getCorridorX();
+        int getCorridorY();
     }
 }
