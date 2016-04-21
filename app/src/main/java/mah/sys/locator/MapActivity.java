@@ -117,7 +117,7 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
 
         // Stäng av frammåtknappen under laddningen.
         btnGoBack.setEnabled(true);
-        btnGoForward.setEnabled(false);
+        btnGoForward.setEnabled(true); // ska sättas till false när tester är klara
 
         // Starta laddningsfragment.
         LoadingFragment startFragment = new LoadingFragment();
