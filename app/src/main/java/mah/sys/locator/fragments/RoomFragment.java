@@ -45,6 +45,11 @@ public class RoomFragment extends Fragment {
         callback.setIntructions(topText,bottomText);
     }
 
+    public void onClick (){
+
+        if
+    }
+
     public interface RoomFragmentCommunicator extends FragmentCommunicator {
         Bitmap getFloorMap();
         double getRoomCoords();

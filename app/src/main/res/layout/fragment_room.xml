@@ -14,36 +14,39 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="221dp"
+        android:layout_height="205dp"
         android:layout_gravity="center_horizontal|bottom">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="47dp"
-            android:text="  Hur tog du dig till aktuella våningen?"
-            android:id="@+id/twElevatorStaits"
-            android:layout_gravity="left|top"
-            android:textColor="#FF000000"
-            android:textStyle="bold" />
-
-               <RadioButton
-            android:layout_width="89dp"
-            android:layout_height="72dp"
-            android:text="Hiss"
-            android:id="@+id/radiobtnElevator"
-            android:layout_gravity="left|top"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:checked="false" />
+            android:layout_height="wrap_content"
+            android:text="Hur tog du dig till våningen?"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal|top"
+            android:textColor="#5d5b5b" />
 
         <RadioButton
-            android:layout_width="98dp"
-            android:layout_height="78dp"
-            android:text="Trappa"
-            android:id="@+id/radiobtnStairs"
-            android:layout_gravity="center_horizontal|top"
-            android:textStyle="bold"
-            android:clickable="true" />
+            android:layout_width="82dp"
+            android:layout_height="50dp"
+            android:text="Hiss"
+            android:id="@+id/radioButtonElevator"
+            android:layout_gravity="center"
+            android:textColor="#5d5b5b" />
 
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="105dp"
+            android:text="Trappor"
+            android:id="@+id/radioButtonStairs"
+            android:layout_gravity="center_horizontal|top"
+            android:textColor="#5d5b5b" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/buttonSelection"
+            android:layout_gravity="right|center_vertical" />
     </FrameLayout>
+
 </FrameLayout>
