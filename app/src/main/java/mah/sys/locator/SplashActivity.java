@@ -110,6 +110,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             strings = server.getComplexes(searchString);
         } catch (IOException e) {
             Log.w("Test", "Connection Error!");
+            Log.w("Test", e.toString());
             // TODO: Error msg
         }
         return strings;

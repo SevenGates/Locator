@@ -51,48 +51,41 @@ public class ServerCommunicator {
             PORT = 8080;
 
     public List<String> getComplexes(String text) throws IOException {
-        List<String> list = new ArrayList<>();
-        list.add("Malmö Högskola");
-        list.add("Lunds Universitet");
-        list.add("Malmö Akutmottagningen");
-        list.add("Malmö Arena");
-        list.add("Malmgruvan i Kiruna");
-        list.add("Halmö Stadsbibliotek");
-        List<String> filteredList = new ArrayList<>();
-        for (String S: list)
-            if(S.substring(0,text.length()).toLowerCase().equals(text.toLowerCase()))
-                filteredList.add(S);
-        return filteredList;
-
-        /*List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<String>();
         // Skapa socket.
         Socket socket = new Socket(IP_ADDRESS, PORT);
 
         // Sätt strömmarna.
         DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        DataInputStream input = new DataInputStream(socket.getInputStream());
+        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
         // Skicka servern ett meddelande.
         output.writeUTF(GET_COMPLEX + text);
         output.flush();
 
         Log.w("Test", "Message Sent");
+        try {
+            Object obj = input.readObject();
 
-        int nrOfEntries = input.readInt();
-        String complex;
-        for (int i = 0; i < nrOfEntries; i++) {
-            complex = input.readUTF();
-            strings.add(complex);
+            JSONObject json = new JSONObject(obj.toString());
+
+            int nrOfEntries = Integer.parseInt(json.getString("nbrOfPlaces"));
+            System.out.println(json.toString());
+            String complex;
+            for (int i = 1; i < nrOfEntries+1; i++) {
+                complex = json.getString("place" + i);
+                strings.add(complex);
+            }
+        } catch (ClassNotFoundException | JSONException e) {
+
         }
         // Stäng socket.
         socket.close();
 
-        return confirm;*/
+        return strings;
     }
 
     public boolean confirmComplex(String text) throws IOException {
-        return true;
-        /*
         boolean confirm = false;
         // Skapa socket.
         Socket socket = new Socket(IP_ADDRESS, PORT);
@@ -113,7 +106,6 @@ public class ServerCommunicator {
         socket.close();
 
         return confirm;
-        */
     }
 
     public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException {
