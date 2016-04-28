@@ -2,12 +2,17 @@ package mah.sys.locator;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,7 +30,7 @@ import mah.sys.locator.fragments.LevelFragment;
 import mah.sys.locator.fragments.LoadingFragment;
 import mah.sys.locator.fragments.RoomFragment;
 
-public class MapActivity extends FragmentActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
+public class MapActivity extends AppCompatActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
     // Variabler från sökning.
     private Bitmap
@@ -41,13 +46,15 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
             corridorX,
             corridorY;
 
+    private int[][] path;
+
     private String
             buildingName,
             roomName;
 
     private ServerCommunicator server;
 
-    private Button
+    private AppCompatButton
             btnGoBack,
             btnGoForward;
     private TextView
@@ -67,8 +74,9 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-
         Log.w("Test", "Activity Started");
+
+        // Ladda förra instance om den finns.
         if (savedInstanceState != null)
             return;
 
@@ -79,14 +87,19 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         server = new ServerCommunicator();
 
         // Hämta views.
-        btnGoBack = (Button) findViewById(R.id.btnGuideBack);
-        btnGoForward = (Button) findViewById(R.id.btnGuideForward);
+        btnGoBack = (AppCompatButton)findViewById(R.id.btnGuideBack);
+        btnGoForward = (AppCompatButton)findViewById(R.id.btnGuideForward);
         txtTopGuide = (TextView) findViewById(R.id.txtGuideStep);
         txtBottomGuide = (TextView) findViewById(R.id.txtGuideDesc);
 
         // Sätt Listeners.
         btnGoBack.setOnClickListener(this);
         btnGoForward.setOnClickListener(this);
+
+        // Färga knappar TODO: Detta är inte snyggt, fixa detta?
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
+        btnGoBack.setSupportBackgroundTintList(csl);
+        btnGoForward.setSupportBackgroundTintList(csl);
 
         // Få variabler från Intent.
         Intent intent = getIntent();
@@ -221,15 +234,33 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
 
     private void markRoomOnBitMap() {
         Bitmap image = floorMap.copy(floorMap.getConfig(),true);
+        Canvas canvas = new Canvas(image);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor("#BF360C"));
+
+        canvas.drawCircle(roomX - 5, roomY - 5, 10, paint);
+        floorMap = image;
+
+        /*Bitmap image = floorMap.copy(floorMap.getConfig(),true);
         int[] pixels = new int[image.getHeight() * image.getWidth()];
 
         int width = image.getWidth(), height = image.getHeight();
         image.getPixels(pixels, 0, width, 0, 0, width, height);
         for (int i=(roomY-10)*width; i<width*roomY+10*width; i+=width)
             for(int j = roomX-10; j<roomX+10; j++)
-                pixels[i+j] = Color.RED;
+                pixels[i+j] = Color.parseColor("#BF360C");
         image.setPixels(pixels, 0, width, 0, 0, width, height);
-        floorMap = image;
+        floorMap = image;*/
+    }
+
+    private void drawLineToRoom() {
+        Canvas canvas = new Canvas(floorMap);
+
+        Paint paint = new Paint();
+        paint.setColor(Color.parseColor("#BF360C"));
+
+        canvas.drawLine(0,0,400,400, paint);
     }
 
     @Override
@@ -305,12 +336,20 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
         corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
 
-        Log.w("Test", Integer.toString(roomX));
-        Log.w("Test", Integer.toString(roomY));
-        Log.w("Test", Integer.toString(doorX));
-        Log.w("Test", Integer.toString(doorY));
-        Log.w("Test", Integer.toString(corridorX));
-        Log.w("Test", Integer.toString(corridorY));
+        int nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodes"));
+        Log.w("Test", Integer.toString(nbrOfNodes));
+        path = new int[nbrOfNodes][2];
+        String node;
+        for(int i = 1; i < nbrOfNodes+1; i++){
+            node = objects.get("node"+i);
+            Log.w("Test", node.split("\\.")[0]);
+            Log.w("Test", node.split("\\.")[1]);
+            Log.w("Test", Integer.toString(path[i-1][0]));
+            Log.w("Test", Integer.toString(path[i-1][1]));
+        }
+
+        for(int i = 0; i < path.length; i++)
+            System.out.println(path[i][0] + ", " + path[i][1]);
 
         // Hämta båda bilder och decodea dem till Bitmaps
         byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);
@@ -320,6 +359,7 @@ public class MapActivity extends FragmentActivity implements  View.OnClickListen
         floorMap = getBitmap(floorMaps);
 
         markRoomOnBitMap();
+        drawLineToRoom();
 
         // Starta den första fragmenten.
         switchFragment(currentFragmentIndex);

@@ -2,8 +2,10 @@ package mah.sys.locator;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,7 +19,7 @@ import java.util.Observer;
 
 public class SplashActivity extends AppCompatActivity implements View.OnClickListener, Observer {
 
-    private Button btnChoose;
+    private AppCompatButton btnChoose;
     private DelayAutoCompleteTextView searchField;
     private ServerCommunicator server;
 
@@ -42,8 +44,12 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         server = new ServerCommunicator();
 
         // Ladda Knapp.
-        btnChoose = (Button)findViewById(R.id.buttonChoose);
+        btnChoose = (AppCompatButton)findViewById(R.id.buttonChoose);
         btnChoose.setOnClickListener(this);
+
+        // Färga knapp. TODO: Detta är inte snyggt, fixa detta?
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
+        btnChoose.setSupportBackgroundTintList(csl);
 
         // Ladda sökfält.
         searchField = (DelayAutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
