@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="mah.sys.locator.fragments.RoomFragment"
-    android:background="#ffffff">
+    android:background="@color/backgroundColor">
 
 
     <ImageView

@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="@string/change_place"
             android:id="@+id/buttonChangePlace"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="55dp"
             android:layout_below="@id/buttonSearchProg"/>
 
     </RelativeLayout>
