@@ -19,4 +19,11 @@
     <string name="arrowRight">&gt;</string>
     <string name="btnText_cancel">Avbryt</string>
     <string name="btnText_finish">Framme!</string>
+
+    <!-- Errors -->
+    <string name="error_offline">Kunde ej upprätta anslutning till server</string>
+    <string name="error_unknown">Ett oväntat fel inträffades</string>
+    <string name="error_no_complex">Finns ingen plats vid det namnet</string>
+    <string name="error_no_room">Finns inget rum vid det namnet</string>
+    <string name="error_no_program">Finns inget program vid det namnet</string>
 </resources>
