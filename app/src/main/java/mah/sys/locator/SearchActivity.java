@@ -2,12 +2,14 @@ package mah.sys.locator;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -26,7 +28,7 @@ import java.net.Socket;
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Skapa variabler
-    private Button
+    private AppCompatButton
         btnSearchRoom,
         btnSearchProg,
         btnChangePlace;
@@ -39,10 +41,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_search);
 
         // Tildela views efter ID.
-        btnSearchProg = (Button)findViewById(R.id.buttonSearchProg);
-        btnSearchRoom = (Button)findViewById(R.id.buttonSearchRoom);
-        btnChangePlace = (Button)findViewById(R.id.buttonChangePlace);
+        btnSearchProg = (AppCompatButton)findViewById(R.id.buttonSearchProg);
+        btnSearchRoom = (AppCompatButton)findViewById(R.id.buttonSearchRoom);
+        btnChangePlace = (AppCompatButton)findViewById(R.id.buttonChangePlace);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
+
+        // Färga knappar TODO: Detta är inte snyggt, fixa detta?
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
+        btnSearchProg.setSupportBackgroundTintList(csl);
+        btnSearchRoom.setSupportBackgroundTintList(csl);
+        btnChangePlace.setSupportBackgroundTintList(csl);
 
         // Lägg till clickListener.
         btnSearchProg.setOnClickListener(this);

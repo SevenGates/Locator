@@ -7,9 +7,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/colorPrimary"
+    android:background="@color/backgroundColor"
     tools:context="mah.sys.locator.SplashActivity"
-    android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
     <TextView
         android:layout_width="wrap_content"
@@ -52,7 +52,9 @@
         android:text="@string/choose"
         android:id="@+id/buttonChoose"
         android:layout_below="@+id/frameLayout"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/buttonColor"
+        android:textColor="#fff"/>
 
 
 

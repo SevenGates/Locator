@@ -22,6 +22,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -51,7 +52,7 @@ public class ServerCommunicator {
             PORT = 8080;
 
     public List<String> getComplexes(String text) throws IOException {
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
         // Skapa socket.
         Socket socket = new Socket(IP_ADDRESS, PORT);
 
@@ -65,12 +66,12 @@ public class ServerCommunicator {
 
         Log.w("Test", "Message Sent");
         try {
+            // Läs in JSON objekt
             Object obj = input.readObject();
-
             JSONObject json = new JSONObject(obj.toString());
 
+            // Antal platser
             int nrOfEntries = Integer.parseInt(json.getString("nbrOfPlaces"));
-            System.out.println(json.toString());
             String complex;
             for (int i = 1; i < nrOfEntries+1; i++) {
                 complex = json.getString("place" + i);
@@ -134,8 +135,20 @@ public class ServerCommunicator {
             objects.put("FloorMap",json.getString("map"));
             objects.put("RoomId",json.getString("roomid"));
             objects.put("RoomCoor",json.getString("roomCoor"));
-            objects.put("DoorCoor",json.getString("doorCoor"));
+            objects.put("DoorCoor", json.getString("doorCoor"));
             objects.put("CorridorCoor",json.getString("corridorCoor"));
+            objects.put("nbrOfNodes", json.getString("nbrOfNodes"));
+            Iterator<String> interator = json.keys();
+            while(interator.hasNext())
+            Log.w("JSON", interator.next());
+            int nodes = Integer.parseInt(objects.get("nbrOfNodes"));
+            for (int i = 1; i < nodes+1; i++) {
+                objects.put("node" + i, json.getString("node" + i));
+            }
+            Log.w("JSON", json.getString("node2"));
+            Log.w("JSON", json.getString("node3"));
+
+            Log.w("Test", "Data Parsed");
 
             // Stäng socket.
             socket.close();

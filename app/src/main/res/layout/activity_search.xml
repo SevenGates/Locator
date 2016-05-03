@@ -1,20 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-    tools:context="mah.sys.locator.SearchActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/backgroundColor"
+    tools:context="mah.sys.locator.SplashActivity"
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-    </android.support.design.widget.AppBarLayout>
+        android:gravity="center"
+        android:paddingTop="100dp">
 
-    <include layout="@layout/content_search" />
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:layout_weight="1"
+            android:id="@+id/editTextSearch" />
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/search_for_room"
+            android:id="@+id/buttonSearchRoom"
+            android:layout_below="@id/editTextSearch"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="#fff"/>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/search_for_prog"
+            android:id="@+id/buttonSearchProg"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/buttonSearchRoom"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="#fff"/>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="@string/change_place"
+            android:id="@+id/buttonChangePlace"
+            android:layout_marginTop="55dp"
+            android:layout_below="@id/buttonSearchProg"
+            android:backgroundTint="@color/buttonColor"
+            android:textColor="#fff"/>
+
+    </RelativeLayout>
 
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
