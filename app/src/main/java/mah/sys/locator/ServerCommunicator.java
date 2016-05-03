@@ -22,6 +22,7 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -134,16 +135,18 @@ public class ServerCommunicator {
             objects.put("FloorMap",json.getString("map"));
             objects.put("RoomId",json.getString("roomid"));
             objects.put("RoomCoor",json.getString("roomCoor"));
-            objects.put("DoorCoor",json.getString("doorCoor"));
+            objects.put("DoorCoor", json.getString("doorCoor"));
             objects.put("CorridorCoor",json.getString("corridorCoor"));
             objects.put("nbrOfNodes", json.getString("nbrOfNodes"));
-
-            Log.w("JSON", json.getString("node1"));
-            Log.w("JSON", json.getString("node2"));
+            Iterator<String> interator = json.keys();
+            while(interator.hasNext())
+            Log.w("JSON", interator.next());
             int nodes = Integer.parseInt(objects.get("nbrOfNodes"));
             for (int i = 1; i < nodes+1; i++) {
                 objects.put("node" + i, json.getString("node" + i));
             }
+            Log.w("JSON", json.getString("node2"));
+            Log.w("JSON", json.getString("node3"));
 
             Log.w("Test", "Data Parsed");
 

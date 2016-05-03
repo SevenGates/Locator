@@ -239,7 +239,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         Paint paint = new Paint();
         paint.setColor(Color.parseColor("#BF360C"));
 
-        canvas.drawCircle(roomX - 5, roomY - 5, 10, paint);
+        canvas.drawCircle(roomX, roomY, 12, paint);
         floorMap = image;
 
         /*Bitmap image = floorMap.copy(floorMap.getConfig(),true);
@@ -259,8 +259,13 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
 
         Paint paint = new Paint();
         paint.setColor(Color.parseColor("#BF360C"));
+        paint.setStrokeWidth(5);
 
-        canvas.drawLine(0,0,400,400, paint);
+        for(int i = 0; i < path.length-1; i++)
+            canvas.drawLine(path[i][0],path[i][1],path[i+1][0],path[i+1][1], paint);
+        canvas.drawLine(path[path.length-1][0],path[path.length-1][1],corridorX,corridorY, paint);
+        canvas.drawLine(corridorX,corridorY,doorX,doorY, paint);
+        canvas.drawLine(doorX,doorY,roomX,roomY, paint);
     }
 
     @Override
@@ -342,14 +347,15 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         String node;
         for(int i = 1; i < nbrOfNodes+1; i++){
             node = objects.get("node"+i);
+            Log.w("Test", "Node: " + node);
             Log.w("Test", node.split("\\.")[0]);
             Log.w("Test", node.split("\\.")[1]);
-            Log.w("Test", Integer.toString(path[i-1][0]));
-            Log.w("Test", Integer.toString(path[i-1][1]));
+            path[i-1][0] = Integer.parseInt(node.split("\\.")[0]);
+            path[i-1][1] = Integer.parseInt(node.split("\\.")[1]);
         }
 
         for(int i = 0; i < path.length; i++)
-            System.out.println(path[i][0] + ", " + path[i][1]);
+            Log.w("Test", path[i][0] + ", " + path[i][1]);
 
         // Hämta båda bilder och decodea dem till Bitmaps
         byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);

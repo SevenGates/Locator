@@ -97,6 +97,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     try {
                         data = server.confirmComplex(text);
+                        Log.w("ConfirmTest",data.toString());
                     } catch (IOException e) {
                         Log.w("Test", "Connection Error!");
                         // TODO: Error msg, måste fixas i activity, inte från tråden.
