@@ -12,13 +12,14 @@ import android.widget.ImageView;
 
 import mah.sys.locator.FragmentCommunicator;
 import mah.sys.locator.R;
+import mah.sys.locator.ZoomableImageView;
 
 /**
  * Created by Alex on 14-Apr-16.
  */
 public class RoomFragment extends Fragment {
 
-    private ImageView imgViewRoomMap;
+    private ZoomableImageView imgViewRoomMap;
     private RoomFragmentCommunicator callback;
 
     @Override
@@ -36,7 +37,7 @@ public class RoomFragment extends Fragment {
             Log.w("Test", getActivity().toString() + " måste ärva RoomFragmentCommunicator");
         }
 
-        imgViewRoomMap = (ImageView) getView().findViewById(R.id.imgViewRoomMap);
+        imgViewRoomMap = (ZoomableImageView) getView().findViewById(R.id.imgViewRoomMap);
         Bitmap image = callback.getFloorMap();
 
         imgViewRoomMap.setImageBitmap(image);

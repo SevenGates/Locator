@@ -12,6 +12,6 @@
         android:text=""
         android:id="@+id/txtLevel"
         android:layout_gravity="center"
-        android:textSize="60pt"
+        android:textSize="250dp"
         android:typeface="monospace" />
 </FrameLayout>

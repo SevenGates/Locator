@@ -27,9 +27,7 @@
         android:id="@+id/fragment_container_map"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_weight="1"/>
 
     <RelativeLayout
     android:layout_width="match_parent"
@@ -71,7 +69,6 @@
             android:layout_below="@+id/txtGuideDesc"
             android:layout_alignLeft="@id/strut"
             android:layout_alignParentRight="true"
-            android:enabled="false"
             android:backgroundTint="@color/buttonColor"
             android:textColor="#fff"/>
     </RelativeLayout>

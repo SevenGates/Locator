@@ -94,8 +94,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private Intent createIntent() {
         Intent intent = new Intent(this,MapActivity.class);
 
-        // Vad användaren sökt på.
-        String searchTerm = textSearch.getText().toString();
+        // Vad användaren sökt på. Filtrera ut tecken.
+        String searchTerm = textSearch.getText().toString().replaceAll("[^a-öA-Ö0-9]+","");
         intent.putExtra("searchTerm",searchTerm);
 
         return intent;

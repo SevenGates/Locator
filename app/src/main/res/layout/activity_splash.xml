@@ -56,7 +56,16 @@
         android:backgroundTint="@color/buttonColor"
         android:textColor="#fff"/>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/errorText"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/buttonChoose"
+        android:id="@+id/txtErrorSplash"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -65,5 +74,5 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/buttonChoose"
         android:background="@drawable/logo"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="50dp"/>
 </RelativeLayout>

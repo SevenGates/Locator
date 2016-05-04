@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import mah.sys.locator.FragmentCommunicator;
 import mah.sys.locator.R;
+import mah.sys.locator.ZoomableImageView;
 
 /**
  * Created by Alex on 04-Apr-16.
@@ -18,7 +19,7 @@ import mah.sys.locator.R;
 public class BuildingFragment extends Fragment {
 
     // Skapa variabler
-    private ImageView mapView;
+    private ZoomableImageView mapView;
     private BuildingFragmentCommunicator callback;
 
     @Override
@@ -36,7 +37,7 @@ public class BuildingFragment extends Fragment {
             Log.w("Test", getActivity().toString() + " måste ärva BuildingFragmentCommunicator");
         }
 
-        mapView = (ImageView) getView().findViewById(R.id.imageViewMap);
+        mapView = (ZoomableImageView) getView().findViewById(R.id.imageViewMap);
         Bitmap image = callback.getOverheadMap();
         mapView.setImageBitmap(image);
         String

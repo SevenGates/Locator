@@ -23,8 +23,7 @@ public class LevelFragment extends Fragment {
 
     private LevelFragmentCommunicator callback;
     private int
-        goalFloor,
-        maxFloors;
+        goalFloor;
     private TextView txtLevel;
 
     @Override
@@ -45,9 +44,8 @@ public class LevelFragment extends Fragment {
         txtLevel = (TextView)getView().findViewById(R.id.txtLevel);
 
         goalFloor = callback.getGoalFloor();
-        maxFloors = callback.getMaxFloors();
 
-        txtLevel.setText(goalFloor + "/" + maxFloors);
+        txtLevel.setText(Integer.toString(goalFloor));
 
         String
                 topText = getResources().getString(R.string.guide_level_top),
@@ -56,7 +54,6 @@ public class LevelFragment extends Fragment {
     }
 
     public interface LevelFragmentCommunicator extends FragmentCommunicator {
-        int getMaxFloors();
         int getGoalFloor();
     }
 

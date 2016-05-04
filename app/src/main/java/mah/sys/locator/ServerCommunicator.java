@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.net.ConnectException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +55,8 @@ public class ServerCommunicator {
     public List<String> getComplexes(String text) throws IOException {
         List<String> strings = new ArrayList<>();
         // Skapa socket.
-        Socket socket = new Socket(IP_ADDRESS, PORT);
+        Socket socket = new Socket();
+        socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
         // Sätt strömmarna.
         DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -89,7 +91,8 @@ public class ServerCommunicator {
     public boolean confirmComplex(String text) throws IOException {
         boolean confirm = false;
         // Skapa socket.
-        Socket socket = new Socket(IP_ADDRESS, PORT);
+        Socket socket = new Socket();
+        socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
         // Sätt strömmarna.
         DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -111,9 +114,12 @@ public class ServerCommunicator {
 
     public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException {
         HashMap<String,String> objects = new HashMap<>();
+        Log.w("Test",searchTerm);
+        Log.w("Test",choosenComplex);
         try {
             // Skapa socket.
-            Socket socket = new Socket(IP_ADDRESS, PORT);
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
             // Sätt strömmarna.
             DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -138,9 +144,9 @@ public class ServerCommunicator {
             objects.put("DoorCoor", json.getString("doorCoor"));
             objects.put("CorridorCoor",json.getString("corridorCoor"));
             objects.put("nbrOfNodes", json.getString("nbrOfNodes"));
-            Iterator<String> interator = json.keys();
-            while(interator.hasNext())
-            Log.w("JSON", interator.next());
+            Iterator<String> iterator = json.keys();
+            while(iterator.hasNext())
+            Log.w("JSON", iterator.next());
             int nodes = Integer.parseInt(objects.get("nbrOfNodes"));
             for (int i = 1; i < nodes+1; i++) {
                 objects.put("node" + i, json.getString("node" + i));

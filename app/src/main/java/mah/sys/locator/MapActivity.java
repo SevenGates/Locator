@@ -32,7 +32,6 @@ import mah.sys.locator.fragments.RoomFragment;
 
 public class MapActivity extends AppCompatActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
-    // Variabler från sökning.
     private Bitmap
             overheadMap,
             floorMap;
@@ -61,10 +60,10 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
             txtTopGuide,
             txtBottomGuide;
 
+    private boolean loading = true;
+
     private final int MIN_SWIPE_DISTANCE = 200;
     private float touchX1, touchX2;
-
-    private boolean loading = true;
 
     private final Fragment[] FRAGMENTS = { new BuildingFragment(), new LevelFragment(), new RoomFragment()};
     private int currentFragmentIndex;
@@ -132,8 +131,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         new Thread(runnable).start();
 
         // Stäng av frammåtknappen under laddningen.
-        btnGoBack.setEnabled(true);
-        btnGoForward.setEnabled(false);
+        btnGoForward.setVisibility(View.GONE);
 
         // Starta laddningsfragment.
         LoadingFragment startFragment = new LoadingFragment();
@@ -141,6 +139,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         Log.w("Test", "Fragment Started");
     }
 
+    // region GetFunctions
     private Bitmap getBitmap(byte[] bytes) {
         // Avkoda bytearrayen till en bild.
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -199,14 +198,10 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     }
 
     @Override
-    public int getMaxFloors() {
-        return maxFloor;
-    }
-
-    @Override
     public int getGoalFloor() {
         return goalFloor;
     }
+    //endregion
 
     private void updateButtonText() {
         String
@@ -372,7 +367,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                btnGoForward.setEnabled(true);
+                btnGoForward.setVisibility(View.VISIBLE);
             }
         });
         loading = false;
