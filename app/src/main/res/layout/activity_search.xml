@@ -11,18 +11,24 @@
     tools:context="mah.sys.locator.SplashActivity"
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-    <RelativeLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="100dp">
-
         <EditText
             android:layout_height="wrap_content"
             android:layout_width="250dp"
             android:layout_weight="1"
+            android:layout_marginTop="70dp"
+            android:layout_centerHorizontal="true"
             android:id="@+id/editTextSearch" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/errorText"
+            android:text=""
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/editTextSearch"
+            android:id="@+id/txtErrorSearch"
+            android:layout_centerHorizontal="true" />
 
         <Button
             android:layout_width="250dp"
@@ -30,6 +36,8 @@
             android:text="@string/search_for_room"
             android:id="@+id/buttonSearchRoom"
             android:layout_below="@id/editTextSearch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
             android:backgroundTint="@color/buttonColor"
             android:textColor="#fff"/>
 
@@ -41,6 +49,7 @@
             android:layout_marginTop="5dp"
             android:layout_below="@id/buttonSearchRoom"
             android:backgroundTint="@color/buttonColor"
+            android:layout_centerHorizontal="true"
             android:textColor="#fff"/>
 
         <Button
@@ -51,9 +60,7 @@
             android:layout_marginTop="55dp"
             android:layout_below="@id/buttonSearchProg"
             android:backgroundTint="@color/buttonColor"
+            android:layout_centerHorizontal="true"
             android:textColor="#fff"/>
-
-    </RelativeLayout>
-
 
 </RelativeLayout>

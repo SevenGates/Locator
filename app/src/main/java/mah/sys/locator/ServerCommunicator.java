@@ -112,7 +112,7 @@ public class ServerCommunicator {
         return confirm;
     }
 
-    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException {
+    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException, SearchErrorException {
         HashMap<String,String> objects = new HashMap<>();
         Log.w("Test",searchTerm);
         Log.w("Test",choosenComplex);
@@ -133,6 +133,12 @@ public class ServerCommunicator {
             Object obj = input.readObject();
 
             JSONObject json = new JSONObject(obj.toString());
+
+            // Fel från databasen, avbryt sökning.
+            if (json.getString("name").equals("Error")) {
+                socket.close();
+                throw new SearchErrorException(json.getString("message"));
+            }
 
             objects.put("Name",json.getString("name"));
             objects.put("Overhead",json.getString("path"));

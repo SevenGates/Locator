@@ -119,9 +119,12 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
                         setChanged();
                         notifyObservers();
                         Log.w("Test", "Observers Notified MapActiviy");
-                    } catch (IOException e) {
+                    } catch (IOException | SearchErrorException e) {
                         Log.w("Test", "Connection Error!");
-                        // TODO: Error msg, måste fixas i activity, inte från tråden.
+                        Log.w("Exception", e.getMessage());
+                        Intent newIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                        newIntent.putExtra("Error", e.getMessage());
+                        startActivity(newIntent);
                     }
                 }
             }

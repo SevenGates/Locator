@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,6 +35,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnChangePlace;
     private EditText
         textSearch;
+    private TextView
+        txtError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnSearchRoom = (AppCompatButton)findViewById(R.id.buttonSearchRoom);
         btnChangePlace = (AppCompatButton)findViewById(R.id.buttonChangePlace);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
+        txtError = (TextView)findViewById(R.id.txtErrorSearch);
+
+        try{
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            String extra = bundle.getString("Error");
+            txtError.setText(extra);
+        } catch (NullPointerException e) { }
 
         // Färga knappar TODO: Detta är inte snyggt, fixa detta?
         ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
@@ -93,11 +104,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
      */
     private Intent createIntent() {
         Intent intent = new Intent(this,MapActivity.class);
-
         // Vad användaren sökt på. Filtrera ut tecken.
         String searchTerm = textSearch.getText().toString().replaceAll("[^a-öA-Ö0-9]+","");
         intent.putExtra("searchTerm",searchTerm);
 
         return intent;
+    }
+
+    private String getErrorText(String error) {
+        Log.w("Test", error);
+        switch (error) {
+            case "java.net.ConnectException":
+            case "java.net.SocketTimeoutException":
+                return getResources().getString(R.string.error_offline);
+            default:
+                return getResources().getString(R.string.error_unknown);
+        }
     }
 }
