@@ -18,8 +18,10 @@ import mah.sys.locator.ZoomableImageView;
  */
 public class BuildingFragment extends Fragment {
 
-    // Skapa variabler
+    // Views
     private ZoomableImageView mapView;
+
+    // Callback
     private BuildingFragmentCommunicator callback;
 
     @Override
@@ -31,23 +33,33 @@ public class BuildingFragment extends Fragment {
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
+        // Hämta callback.
         try {
             callback = (BuildingFragmentCommunicator) getActivity();
         } catch (ClassCastException e) {
             Log.w("Test", getActivity().toString() + " måste ärva BuildingFragmentCommunicator");
         }
 
+        // Hitta views.
         mapView = (ZoomableImageView) getView().findViewById(R.id.imageViewMap);
+
+        // Hämta bild och rita den i imageView.
         Bitmap image = callback.getOverheadMap();
         mapView.setImageBitmap(image);
+
+        // Sätt instruktioner.
         String
             buildingName = callback.getBuildingName(),
             topText = getResources().getString(R.string.guide_building_top),
             bottomText = getResources().getString(R.string.guide_building_bottom) + " " +  buildingName;
-        callback.setIntructions(topText,bottomText);
+        callback.setInstructions(topText, bottomText);
         Log.w("Test", "View State Restored");
     }
 
+    /**
+     * Kommunikation med activity.
+     */
     public interface BuildingFragmentCommunicator extends FragmentCommunicator {
         Bitmap getOverheadMap();
         String getBuildingName();
