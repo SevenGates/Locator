@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Views
@@ -21,7 +23,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private EditText
         textSearch;
     private TextView
-        txtError;
+        txtError,
+        txtComplex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnChangePlace = (AppCompatButton)findViewById(R.id.buttonChangePlace);
         textSearch = (EditText)findViewById(R.id.editTextSearch);
         txtError = (TextView)findViewById(R.id.txtErrorSearch);
+        txtComplex = (TextView)findViewById(R.id.txtAppPlace);
 
         // Om Activityn kallas vid fel, visa felmeddelandet.
         try{
@@ -53,6 +57,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         } catch (NullPointerException e) {
             // Ingen feltext att ladda, bra!
         }
+
+        // Ladda valt complex.
+        SharedPreferences settings = getSharedPreferences("mypref",0);
+        String choosenComplex = settings.getString("chosenComplex","");
+        txtComplex.setText(choosenComplex);
 
         // Färga knappar TODO: Detta är inte snyggt, fixa detta?
         ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
@@ -87,16 +96,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             intent.putExtra("isRoomSearch", false);
             startActivity(intent);
             */
+            txtError.setText("Not yet implemented! :)");
         }
 
         if(v == btnChangePlace) {
             // Ta bort den gamla sparade platsen från mobil-minne.
             SharedPreferences settings = getSharedPreferences("mypref",0);
             SharedPreferences.Editor editor = settings.edit();
-            editor.remove("choosenComplex");
+            editor.remove("chosenComplex");
+            editor.commit();
 
             // Byta aktivitet till splash.
-            startActivity(new Intent(this,SplashActivity.class));
+            startActivity(new Intent(this, SplashActivity.class));
         }
     }
 

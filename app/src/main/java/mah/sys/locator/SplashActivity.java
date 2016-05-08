@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
@@ -35,14 +36,14 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         if (savedInstanceState != null)
             return;
 
-/*      TODO: FIXA DETTA
         // Ladda från tidigare valt complex.
         SharedPreferences settings = getSharedPreferences("mypref",0);
-        String choosenComplex = settings.getString("choosenComplex","NO_COMPLEX");
+        String choosenComplex = settings.getString("chosenComplex","NO_COMPLEX");
+        Log.w("Debug",choosenComplex);
         if(!choosenComplex.equals("NO_COMPLEX") ){
             startActivity(new Intent(this,SearchActivity.class));
         }
-    */
+
         // Skappa laddningsskärm.
         loading = new TransparentProgressDialog(this);
 
@@ -97,6 +98,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             editor.putString("chosenComplex", searchField.getText().toString());
             editor.commit();
 
+            Log.w("Debug",searchField.getText().toString() + " Stored!");
+
             // Byta aktivitet.
             startActivity(new Intent(this, SearchActivity.class));
         } else { // Om plats inte finns i DB.
@@ -124,7 +127,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     try {
                         // Serveranrop.
-                        data = server.confirmComplex(text);
+                        data = /*server.confirmComplex(text);*/ true;
                         setChanged();
                         notifyObservers();
                     } catch (final Exception e) {
