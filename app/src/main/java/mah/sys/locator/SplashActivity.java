@@ -127,7 +127,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 public void run() {
                     try {
                         // Serveranrop.
-                        data = /*server.confirmComplex(text);*/ true;
+                        data = server.confirmComplex(text);
                         setChanged();
                         notifyObservers();
                     } catch (final Exception e) {
