@@ -6,4 +6,5 @@
     <color name="errorText">#FF0000</color>
     <color name="backgroundColor">#ffffff</color>
     <color name="buttonColor">#BF360C</color>
+    <color name="black">#000</color>
 </resources>

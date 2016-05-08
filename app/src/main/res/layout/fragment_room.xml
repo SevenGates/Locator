@@ -6,7 +6,7 @@
     android:background="@color/backgroundColor">
 
 
-    <ImageView
+    <mah.sys.locator.ZoomableImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgViewRoomMap"

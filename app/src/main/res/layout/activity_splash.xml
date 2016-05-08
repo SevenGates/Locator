@@ -14,16 +14,29 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/app_name_bold"
+        android:layout_marginTop="7dp"
+        android:id="@+id/txtAppName"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/black"
         android:text="@string/choosePlace"
-        android:layout_marginTop="50dp"
-        android:id="@+id/textView"
+        android:id="@+id/txtChoosePlace"
+        android:layout_marginTop="-3dp"
+        android:layout_below="@+id/txtAppName"
         android:layout_centerHorizontal="true" />
 
     <FrameLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/frameLayout"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/txtChoosePlace"
         android:layout_marginTop="16dp"
         android:layout_alignLeft="@+id/buttonChoose"
         android:layout_alignStart="@+id/buttonChoose">
@@ -56,7 +69,16 @@
         android:backgroundTint="@color/buttonColor"
         android:textColor="#fff"/>
 
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/errorText"
+        android:text=""
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/buttonChoose"
+        android:id="@+id/txtErrorSplash"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -65,5 +87,5 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/buttonChoose"
         android:background="@drawable/logo"
-        android:layout_marginTop="30dp"/>
+        android:layout_marginTop="50dp"/>
 </RelativeLayout>

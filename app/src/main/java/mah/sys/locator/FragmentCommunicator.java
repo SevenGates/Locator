@@ -7,5 +7,5 @@ import android.graphics.Bitmap;
  */
 public interface FragmentCommunicator {
 
-    void setIntructions(String top, String bottom);
+    void setInstructions(String top, String bottom);
 }

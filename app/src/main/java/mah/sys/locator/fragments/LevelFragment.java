@@ -21,10 +21,13 @@ import mah.sys.locator.R;
  */
 public class LevelFragment extends Fragment {
 
+    // Callback
     private LevelFragmentCommunicator callback;
-    private int
-        goalFloor,
-        maxFloors;
+
+    // Variabler
+    private int goalFloor;
+
+    // Views
     private TextView txtLevel;
 
     @Override
@@ -36,27 +39,34 @@ public class LevelFragment extends Fragment {
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
+        // Hämta callback.
         try {
             callback = (LevelFragmentCommunicator) getActivity();
         } catch (ClassCastException e) {
             Log.w("Test", getActivity().toString() + " måste ärva LevelFragmentCommunicator");
         }
 
+        // Hitta view.
         txtLevel = (TextView)getView().findViewById(R.id.txtLevel);
 
+        // Hämta variabler.
         goalFloor = callback.getGoalFloor();
-        maxFloors = callback.getMaxFloors();
 
-        txtLevel.setText(goalFloor + "/" + maxFloors);
+        // Sätt text.
+        txtLevel.setText(Integer.toString(goalFloor));
 
+        // Sätt instruktioner.
         String
                 topText = getResources().getString(R.string.guide_level_top),
                 bottomText = getResources().getString(R.string.guide_level_bottom) + " " + Integer.toString(goalFloor);
-        callback.setIntructions(topText,bottomText);
+        callback.setInstructions(topText, bottomText);
     }
 
+    /**
+     * Kommunikation med activity.
+     */
     public interface LevelFragmentCommunicator extends FragmentCommunicator {
-        int getMaxFloors();
         int getGoalFloor();
     }
 

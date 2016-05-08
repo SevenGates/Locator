@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Inställningar</string>
+    <string name="app_name">Locator</string>
+    <string name="app_name_bold">LOCATOR</string>
+    <string name="arrowLeft">Previous</string>
+    <string name="arrowRight">Next</string>
+    <string name="btnText_cancel">Cancel</string>
+    <string name="btnText_finish">Finished!</string>
+    <string name="change_place">Change locale</string>
+    <string name="choose">Choose</string>
+    <string name="choosePlace">Choose locale</string>
+    <string name="choosePlaceField">Choose locale...</string>
+
+    <string name="guide_building_bottom">Go to </string>
+    <string name="guide_building_top">Step 1 - Building</string>
+    <string name="guide_level_bottom">Go to level</string>
+    <string name="guide_level_top">Step 2 - Level</string>
+    <string name="guide_room_bottom">Follow the arrow to</string>
+    <string name="guide_room_top">Step 3 - Route</string>
+    <string name="loading">Loading...</string>
+    <string name="search_for_prog">Search by program</string>
+    <string name="search_for_room">Search by room</string>
+
+    <!-- Errors -->
+    <string name="error_no_complex">No locale with specified name found</string>
+    <string name="error_no_program">No program with specified name found</string>
+    <string name="error_no_room">No room with specified name found</string>
+    <string name="error_offline">Could not establish connection to server</string>
+    <string name="error_unknown">An unexpected error occurred</string>
+
+</resources>
