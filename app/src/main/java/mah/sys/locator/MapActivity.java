@@ -339,7 +339,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
             goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
             maxFloor = Integer.valueOf(objects.get("MaxFloors"));
             buildingName = objects.get("Name");
-            roomName = objects.get("roomId");
+            roomName = objects.get("RoomId");
 
             // Koordinater
             String
