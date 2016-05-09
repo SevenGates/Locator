@@ -90,7 +90,6 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     public void update(Observable observable, Object data) {
         // Denna klassen ska bara lyssna på ObservableRunnable<Bloolean>
         boolean confirmed = ((ObservableRunnable<Boolean>)observable).getData();
-
         if(confirmed) { // Om plats finns i DB.
             // Spara platsen i telefon-minne.
             SharedPreferences settings = getSharedPreferences("mypref",0);
@@ -121,7 +120,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             loading.show();
 
             // Konfirmera valet med server.
-            final String text = searchField.getText().toString();
+            final String text = searchField.getText().toString().trim();
+
             ObservableRunnable<Boolean> runnable = new ObservableRunnable<Boolean>() {
                 @Override
                 public void run() {
@@ -157,6 +157,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
      */
     public List<String> getComplexes(String searchString) {
         List<String> strings = null;
+
         try {
             // Serveranrop.
             strings = server.getComplexes(searchString);

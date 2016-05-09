@@ -96,7 +96,7 @@ public class ServerCommunicator {
 
         // Sätt strömmarna.
         DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-        DataInputStream input = new DataInputStream(socket.getInputStream());
+        ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
         // Skicka servern ett meddelande.
         output.writeUTF(CONFIRM_COMPLEX + text);
@@ -150,15 +150,15 @@ public class ServerCommunicator {
             objects.put("DoorCoor", json.getString("doorCoor"));
             objects.put("CorridorCoor",json.getString("corridorCoor"));
             objects.put("nbrOfNodes", json.getString("nbrOfNodes"));
+
             Iterator<String> iterator = json.keys();
             while(iterator.hasNext())
-            Log.w("JSON", iterator.next());
+                Log.w("JSON", iterator.next());
+
             int nodes = Integer.parseInt(objects.get("nbrOfNodes"));
             for (int i = 1; i < nodes+1; i++) {
                 objects.put("node" + i, json.getString("node" + i));
             }
-            Log.w("JSON", json.getString("node2"));
-            Log.w("JSON", json.getString("node3"));
 
             Log.w("Test", "Data Parsed");
 
