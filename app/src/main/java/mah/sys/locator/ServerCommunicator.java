@@ -112,10 +112,10 @@ public class ServerCommunicator {
         return confirm;
     }
 
-    public HashMap<String,String> searchRoom(final String searchTerm, final String choosenComplex) throws IOException, SearchErrorException {
+    public HashMap<String,String> searchRoom(final String searchTerm, final String chosenComplex) throws IOException, SearchErrorException {
         HashMap<String,String> objects = new HashMap<>();
         Log.w("Test",searchTerm);
-        Log.w("Test",choosenComplex);
+        Log.w("Test",chosenComplex);
         try {
             // Skapa socket.
             Socket socket = new Socket();
@@ -126,7 +126,7 @@ public class ServerCommunicator {
             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 
             // Skicka servern ett meddelande.
-            output.writeUTF(SEARCH_ROOM + searchTerm + "," + choosenComplex);
+            output.writeUTF(SEARCH_ROOM + searchTerm + "," + chosenComplex);
             output.flush();
             Log.w("Test", "Message Sent");
 
