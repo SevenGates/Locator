@@ -140,24 +140,12 @@ public class ServerCommunicator {
                 throw new SearchErrorException(json.getString("message"));
             }
 
-            objects.put("Name",json.getString("name"));
-            objects.put("Overhead",json.getString("path"));
-            objects.put("MaxFloors",json.getString("floors"));
-            objects.put("GoalFloor",json.getString("id"));
-            objects.put("FloorMap",json.getString("map"));
-            objects.put("RoomId",json.getString("roomid"));
-            objects.put("RoomCoor",json.getString("roomCoor"));
-            objects.put("DoorCoor", json.getString("doorCoor"));
-            objects.put("CorridorCoor",json.getString("corridorCoor"));
-            objects.put("nbrOfNodes", json.getString("nbrOfNodes"));
-
             Iterator<String> iterator = json.keys();
-            while(iterator.hasNext())
-                Log.w("JSON", iterator.next());
-
-            int nodes = Integer.parseInt(objects.get("nbrOfNodes"));
-            for (int i = 1; i < nodes+1; i++) {
-                objects.put("node" + i, json.getString("node" + i));
+            String itemKey;
+            while(iterator.hasNext()) {
+                itemKey = iterator.next();
+                Log.w("JSON", itemKey);
+                objects.put(itemKey,json.getString(itemKey));
             }
 
             Log.w("Test", "Data Parsed");

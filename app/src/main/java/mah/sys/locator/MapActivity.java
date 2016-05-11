@@ -28,22 +28,23 @@ import mah.sys.locator.fragments.RoomFragment;
 public class MapActivity extends AppCompatActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
     // Variabler från sökning.
-    private Bitmap
-            overheadMap,
-            floorMap;
+    private Bitmap floorMap;
     private int
             goalFloor,
-            maxFloor,
             roomX,
             roomY,
             doorX,
             doorY,
             corridorX,
             corridorY;
-    private int[][] path;
+    private int[][][] path;
     private String
             buildingName,
             roomName;
+
+    private double
+            longitude,
+            latitude;
 
     // Server Com
     private ServerCommunicator server;
@@ -117,6 +118,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
                         setChanged();
                         notifyObservers();
                     } catch (IOException | SearchErrorException e) {
+                        Log.w("Test","Error: " + e.getMessage());
                         // Fel påträffades. Gå tillbacks till sökning med fel-meddelande.
                         Intent newIntent = new Intent(getApplicationContext(), SearchActivity.class);
                         newIntent.putExtra("Error", e);
@@ -140,13 +142,9 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     }
 
     // region public getFunctions
-    @Override
-    public Bitmap getOverheadMap() {
-        return overheadMap;
-    }
 
     @Override
-    public int[][] getPath() {
+    public int[][][] getPath() {
         return path;
     }
 
@@ -335,40 +333,69 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         // Denna klassen ska bara lyssna på ObservableRunnable<HashMap<String,String>>
         HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
 
+        /*
+        X "name": "Niagara",
+        X "nbrOfPaths": "3",
+        "floors": "6",
+        X "id": "NI1",
+        X "map": "BILD",
+        X "roomid": "NIB0E07",
+        X "roomCoor": "1236.857",
+        X "doorCoor": "1211.780",
+        X "corridorCoor": "1200.785",
+        "nbrOfNodesS1": "3",
+        "s1node1": "1000.581",
+        "s1node2": "1134.645",
+        "s1node3": "1200.802",
+        "nbrOfNodesS2": "4",
+        "s2node1": "861.705",
+        "s2node2": "998.722",
+        "s2node3": "1014.883",
+        "s2node4": "1200.802",
+        "nbrOfNodesS3": "5",
+        "s3node1": "800.493",
+        "s3node2": "938.439",
+        "s3node3": "1000.581",
+        "s3node4": "1134.645",
+        "s3node5": "1200.802",
+        X "long": "55.6091855",
+        X "lat": "12.9925708",
+        */
+
         // Hämta alla variabler från Hashmapen.
-            goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
-            maxFloor = Integer.valueOf(objects.get("MaxFloors"));
-            buildingName = objects.get("Name");
-            roomName = objects.get("RoomId");
+        buildingName = objects.get("name");
+        goalFloor = Integer.valueOf(objects.get("id").replaceAll("\\D+", ""));
+        roomName = objects.get("roomid");
+        longitude = Double.parseDouble(objects.get("long"));
+        latitude = Double.parseDouble(objects.get("lat"));
 
-            // Koordinater
-            String
-                roomCoords = objects.get("RoomCoor"),
-                doorCoords = objects.get("DoorCoor"),
-                corridorCoors = objects.get("CorridorCoor");
-            roomX = Integer.parseInt(roomCoords.split("\\.")[0]);
-            roomY = Integer.parseInt(roomCoords.split("\\.")[1]);
-            doorX = Integer.parseInt(doorCoords.split("\\.")[0]);
-            doorY = Integer.parseInt(doorCoords.split("\\.")[1]);
-            corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
-            corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
+        // Koordinater
+        String
+            roomCoords = objects.get("roomCoor"),
+            doorCoords = objects.get("doorCoor"),
+            corridorCoors = objects.get("corridorCoor");
+        roomX = Integer.parseInt(roomCoords.split("\\.")[0]);
+        roomY = Integer.parseInt(roomCoords.split("\\.")[1]);
+        doorX = Integer.parseInt(doorCoords.split("\\.")[0]);
+        doorY = Integer.parseInt(doorCoords.split("\\.")[1]);
+        corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
+        corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
 
-            // Path
-            int nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodes"));
-            Log.w("Test", Integer.toString(nbrOfNodes));
-            path = new int[nbrOfNodes][2];
-            String node;
-            for(int i = 1; i < nbrOfNodes+1; i++){
-                node = objects.get("node"+i);
-                path[i-1][0] = Integer.parseInt(node.split("\\.")[0]);
-                path[i-1][1] = Integer.parseInt(node.split("\\.")[1]);
-            }
+        // Path
+        int nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodesS1"));
+        int nbrOfPaths = Integer.parseInt(objects.get("nbrOfPaths"));
+        Log.w("Test", Integer.toString(nbrOfNodes));
+        path = new int[nbrOfPaths][0][0];
+        path[0] = new int[nbrOfNodes][2];
+        String node;
+        for(int i = 1; i < nbrOfNodes+1; i++){
+            node = objects.get("s1node"+i);
+            path[0][i-1][0] = Integer.parseInt(node.split("\\.")[0]);
+            path[0][i-1][1] = Integer.parseInt(node.split("\\.")[1]);
+        }
 
-        // Hämta båda bytearrayer och decodea dem till Bitmaps
-        byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);
-        overheadMap = getBitmap(overheadBytes);
-
-        byte[] floorMaps = Base64.decode(objects.get("FloorMap"), Base64.DEFAULT);
+        // Hämta båda bytearray och decodea till Bitmap.
+        byte[] floorMaps = Base64.decode(objects.get("map"), Base64.DEFAULT);
         floorMap = getBitmap(floorMaps);
 
         // Starta den första fragmenten.

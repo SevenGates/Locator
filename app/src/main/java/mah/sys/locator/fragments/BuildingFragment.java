@@ -78,7 +78,6 @@ public class BuildingFragment extends Fragment {
      * Kommunikation med activity.
      */
     public interface BuildingFragmentCommunicator extends FragmentCommunicator {
-        Bitmap getOverheadMap();
         String getBuildingName();
     }
 

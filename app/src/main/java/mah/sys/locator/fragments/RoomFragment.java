@@ -38,7 +38,7 @@ public class RoomFragment extends Fragment {
             doorY,
             corridorX,
             corridorY;
-    private int[][] path;
+    private int[][][] path;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,8 +96,8 @@ public class RoomFragment extends Fragment {
         paint.setStrokeWidth(5);
 
         for(int i = 0; i < path.length-1; i++)
-            canvas.drawLine(path[i][0],path[i][1],path[i+1][0],path[i+1][1], paint);
-        canvas.drawLine(path[path.length-1][0],path[path.length-1][1],corridorX,corridorY, paint);
+            canvas.drawLine(path[0][i][0],path[0][i][1],path[0][i+1][0],path[0][i+1][1], paint);
+        canvas.drawLine(path[0][path.length-1][0],path[0][path.length-1][1],corridorX,corridorY, paint);
         canvas.drawLine(corridorX, corridorY, doorX, doorY, paint);
         canvas.drawLine(doorX, doorY, roomX, roomY, paint);
 
@@ -117,6 +117,6 @@ public class RoomFragment extends Fragment {
         int getDoorY();
         int getCorridorX();
         int getCorridorY();
-        int[][] getPath();
+        int[][][] getPath();
     }
 }
