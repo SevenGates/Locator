@@ -9,6 +9,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -25,6 +26,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private TextView
         txtError,
         txtComplex;
+
+    private ImageButton
+        btnSwe,
+        btnEng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnSearchProg.setOnClickListener(this);
         btnSearchRoom.setOnClickListener(this);
         btnChangePlace.setOnClickListener(this);
+
+        btnSwe.setOnClickListener(this);
     }
 
     /**
@@ -109,8 +116,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             // Byta aktivitet till splash.
             startActivity(new Intent(this, SplashActivity.class));
         }
+
+        // svenska flaggan knappen
+        if (v==btnSwe){
+
+        }
+
+        if (v==btnEng){
+
+        }
+
     }
 
+    public void ButtonLanguag(){
+
+    }
     /**
      * Skapar ett nytt intent för MapActivity.
      * @return Intent för MapActivity.
