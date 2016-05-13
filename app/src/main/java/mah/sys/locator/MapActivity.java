@@ -196,6 +196,16 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     public int getGoalFloor() {
         return goalFloor;
     }
+
+    @Override
+    public double getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public double getLatitude() {
+        return latitude;
+    }
     //endregion
 
     /**
@@ -333,35 +343,6 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         // Denna klassen ska bara lyssna på ObservableRunnable<HashMap<String,String>>
         HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
 
-        /*
-        X "name": "Niagara",
-        X "nbrOfPaths": "3",
-        "floors": "6",
-        X "id": "NI1",
-        X "map": "BILD",
-        X "roomid": "NIB0E07",
-        X "roomCoor": "1236.857",
-        X "doorCoor": "1211.780",
-        X "corridorCoor": "1200.785",
-        "nbrOfNodesS1": "3",
-        "s1node1": "1000.581",
-        "s1node2": "1134.645",
-        "s1node3": "1200.802",
-        "nbrOfNodesS2": "4",
-        "s2node1": "861.705",
-        "s2node2": "998.722",
-        "s2node3": "1014.883",
-        "s2node4": "1200.802",
-        "nbrOfNodesS3": "5",
-        "s3node1": "800.493",
-        "s3node2": "938.439",
-        "s3node3": "1000.581",
-        "s3node4": "1134.645",
-        "s3node5": "1200.802",
-        X "long": "55.6091855",
-        X "lat": "12.9925708",
-        */
-
         // Hämta alla variabler från Hashmapen.
         buildingName = objects.get("name");
         goalFloor = Integer.valueOf(objects.get("id").replaceAll("\\D+", ""));
@@ -382,16 +363,18 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
 
         // Path
-        int nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodesS1"));
         int nbrOfPaths = Integer.parseInt(objects.get("nbrOfPaths"));
-        Log.w("Test", Integer.toString(nbrOfNodes));
-        path = new int[nbrOfPaths][0][0];
-        path[0] = new int[nbrOfNodes][2];
+        int nbrOfNodes;
         String node;
-        for(int i = 1; i < nbrOfNodes+1; i++){
-            node = objects.get("s1node"+i);
-            path[0][i-1][0] = Integer.parseInt(node.split("\\.")[0]);
-            path[0][i-1][1] = Integer.parseInt(node.split("\\.")[1]);
+        path = new int[nbrOfPaths][0][0];
+        for(int j = 0; j < nbrOfPaths; j++) {
+            nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodesS" + (j+1)));
+            path[j] = new int[nbrOfNodes][2];
+            for (int i = 1; i < nbrOfNodes + 1; i++) {
+                node = objects.get("s" + (j+1) + "node" + i);
+                path[j][i - 1][0] = Integer.parseInt(node.split("\\.")[0]);
+                path[j][i - 1][1] = Integer.parseInt(node.split("\\.")[1]);
+            }
         }
 
         // Hämta båda bytearray och decodea till Bitmap.

@@ -95,9 +95,10 @@ public class RoomFragment extends Fragment {
         paint.setColor(Color.parseColor("#BF360C"));
         paint.setStrokeWidth(5);
 
+        int pathNr = 2;
         for(int i = 0; i < path.length-1; i++)
-            canvas.drawLine(path[0][i][0],path[0][i][1],path[0][i+1][0],path[0][i+1][1], paint);
-        canvas.drawLine(path[0][path.length-1][0],path[0][path.length-1][1],corridorX,corridorY, paint);
+            canvas.drawLine(path[pathNr][i][0],path[pathNr][i][1],path[pathNr][i+1][0],path[pathNr][i+1][1], paint);
+        canvas.drawLine(path[pathNr][path.length-1][0],path[pathNr][path.length-1][1],corridorX,corridorY, paint);
         canvas.drawLine(corridorX, corridorY, doorX, doorY, paint);
         canvas.drawLine(doorX, doorY, roomX, roomY, paint);
 

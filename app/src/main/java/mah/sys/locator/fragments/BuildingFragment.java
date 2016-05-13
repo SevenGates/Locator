@@ -53,8 +53,8 @@ public class BuildingFragment extends Fragment {
         }
 
         googleMap = mapView.getMap();
-        double latitude = 55.609192;
-        double longitude = 12.994765;
+        double latitude = callback.getLatitude();
+        double longitude = callback.getLongitude();
 
         // Skapa markör
         MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude,longitude)).title("Hello Maps");
@@ -70,7 +70,6 @@ public class BuildingFragment extends Fragment {
                 topText = getResources().getString(R.string.guide_building_top),
                 bottomText = getResources().getString(R.string.guide_building_bottom) + " " +  buildingName;
         callback.setInstructions(topText, bottomText);
-        Log.w("Test", "View State Restored");
         return v;
     }
 
@@ -79,6 +78,8 @@ public class BuildingFragment extends Fragment {
      */
     public interface BuildingFragmentCommunicator extends FragmentCommunicator {
         String getBuildingName();
+        double getLongitude();
+        double getLatitude();
     }
 
 
