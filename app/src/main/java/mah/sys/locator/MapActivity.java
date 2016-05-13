@@ -377,6 +377,10 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
             }
         }
 
+        for(int i = 0; i < path.length; i++)
+            for(int j = 0; j < path[i].length; j++)
+                Log.w("Path " + i,path[i][j][0] + ", " + path[i][j][1]);
+
         // Hämta båda bytearray och decodea till Bitmap.
         byte[] floorMaps = Base64.decode(objects.get("map"), Base64.DEFAULT);
         floorMap = getBitmap(floorMaps);
