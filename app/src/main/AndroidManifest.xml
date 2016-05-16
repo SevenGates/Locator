@@ -10,6 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDZo9Mzqj3QA4oX1ouvRiv9vhz_MYR0yNI"/>
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"

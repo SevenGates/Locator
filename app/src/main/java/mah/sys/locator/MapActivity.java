@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Base64;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,22 +27,23 @@ import mah.sys.locator.fragments.RoomFragment;
 public class MapActivity extends AppCompatActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
     // Variabler från sökning.
-    private Bitmap
-            overheadMap,
-            floorMap;
+    private Bitmap floorMap;
     private int
             goalFloor,
-            maxFloor,
             roomX,
             roomY,
             doorX,
             doorY,
             corridorX,
             corridorY;
-    private int[][] path;
+    private int[][][] path;
     private String
             buildingName,
             roomName;
+    private String[] pathNames;
+    private double
+            longitude,
+            latitude;
 
     // Server Com
     private ServerCommunicator server;
@@ -59,13 +59,13 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     // Activityn börjar med att ladda.
     private boolean loading = true;
 
-    // Swipe hjälp-variabler.
-    private final int MIN_SWIPE_DISTANCE = 200;
-    private float touchX1, touchX2;
-
     // Framents med hjälp-variabler.
     private final Fragment[] FRAGMENTS = { new BuildingFragment(), new LevelFragment(), new RoomFragment()};
     private int currentFragmentIndex;
+
+    // Swipe hjälp-variabler. SWIPE ANVÄNDS INTE
+    //private final int MIN_SWIPE_DISTANCE = 200;
+    //private float touchX1, touchX2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +117,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
                         setChanged();
                         notifyObservers();
                     } catch (IOException | SearchErrorException e) {
+                        Log.w("Test","Error: " + e.getMessage());
                         // Fel påträffades. Gå tillbacks till sökning med fel-meddelande.
                         Intent newIntent = new Intent(getApplicationContext(), SearchActivity.class);
                         newIntent.putExtra("Error", e);
@@ -130,24 +131,25 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         runnable.addObserver(this);
         new Thread(runnable).start();
 
-        // Dölj frammåtknappen under laddningen.
+        // Dölj knappar under laddningen.
         btnGoForward.setVisibility(View.GONE);
+        btnGoBack.setVisibility(View.GONE);
 
         // Starta laddningsfragment.
         LoadingFragment startFragment = new LoadingFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_map, startFragment).commit();
-        Log.w("Test", "Fragment Started");
     }
 
     // region public getFunctions
+
     @Override
-    public Bitmap getOverheadMap() {
-        return overheadMap;
+    public int[][][] getPath() {
+        return path;
     }
 
     @Override
-    public int[][] getPath() {
-        return path;
+    public String[] getPathNames() {
+        return pathNames;
     }
 
     @Override
@@ -197,6 +199,16 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     @Override
     public int getGoalFloor() {
         return goalFloor;
+    }
+
+    @Override
+    public double getLongitude() {
+        return longitude;
+    }
+
+    @Override
+    public double getLatitude() {
+        return latitude;
     }
     //endregion
 
@@ -285,10 +297,82 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     }
 
     /**
-     * OnTouch-Listener för swipes
-     * @param event
-     * @return
+     * Kallas av NotifyObservers i Observable
+     * @param observable
+     * @param data
      */
+    @Override
+    public void update(Observable observable, Object data) {
+        // Denna klassen ska bara lyssna på ObservableRunnable<HashMap<String,String>>
+        HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
+
+        // Hämta alla variabler från Hashmapen.
+        buildingName = objects.get("name");
+        goalFloor = Integer.valueOf(objects.get("id").replaceAll("\\D+", ""));
+        roomName = objects.get("roomid");
+        longitude = Double.parseDouble(objects.get("long"));
+        latitude = Double.parseDouble(objects.get("lat"));
+
+        // Koordinater
+        String
+            roomCoords = objects.get("roomCoor"),
+            doorCoords = objects.get("doorCoor"),
+            corridorCoors = objects.get("corridorCoor");
+        roomX = Integer.parseInt(roomCoords.split("\\.")[0]);
+        roomY = Integer.parseInt(roomCoords.split("\\.")[1]);
+        doorX = Integer.parseInt(doorCoords.split("\\.")[0]);
+        doorY = Integer.parseInt(doorCoords.split("\\.")[1]);
+        corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
+        corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
+
+        // Pathnamn
+        int nbrOfPaths = Integer.parseInt(objects.get("nbrOfPaths"));
+        String[] paths = new String[nbrOfPaths];
+        for (int i = 0; i < nbrOfPaths; i++)
+            paths[i] = objects.get("s" + (i+1) + "name");
+        pathNames = paths;
+
+        // Path
+        int nbrOfNodes;
+        String node;
+        path = new int[nbrOfPaths][0][0];
+        for(int j = 0; j < nbrOfPaths; j++) {
+            nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodesS" + (j+1)));
+            path[j] = new int[nbrOfNodes][2];
+            for (int i = 1; i < nbrOfNodes + 1; i++) {
+                node = objects.get("s" + (j+1) + "node" + i);
+                path[j][i - 1][0] = Integer.parseInt(node.split("\\.")[0]);
+                path[j][i - 1][1] = Integer.parseInt(node.split("\\.")[1]);
+            }
+        }
+
+        for(int i = 0; i < path.length; i++)
+            for(int j = 0; j < path[i].length; j++)
+                Log.w("Path " + i,path[i][j][0] + ", " + path[i][j][1]);
+
+        // Hämta båda bytearray och decodea till Bitmap.
+        byte[] floorMaps = Base64.decode(objects.get("map"), Base64.DEFAULT);
+        floorMap = getBitmap(floorMaps);
+
+        // Starta den första fragmenten.
+        switchFragment(currentFragmentIndex);
+
+        // Visa frammåt-knappen.
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnGoForward.setVisibility(View.VISIBLE);
+                btnGoBack.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Laddar inte längre.
+        loading = false;
+    }
+
+    // region Swipe
+    /* =========== SWIPE FUNKTIONALITET ======================
+       =========== INTE IMPLEMENTERAT ========================
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
@@ -324,65 +408,6 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         }
         return super.onTouchEvent(event);
     }
-
-    /**
-     * Kallas av NotifyObservers i Observable
-     * @param observable
-     * @param data
-     */
-    @Override
-    public void update(Observable observable, Object data) {
-        // Denna klassen ska bara lyssna på ObservableRunnable<HashMap<String,String>>
-        HashMap<String,String> objects = ((ObservableRunnable<HashMap<String,String>>) observable).getData();
-
-        // Hämta alla variabler från Hashmapen.
-            goalFloor = Integer.valueOf(objects.get("GoalFloor").replaceAll("\\D+", ""));
-            maxFloor = Integer.valueOf(objects.get("MaxFloors"));
-            buildingName = objects.get("Name");
-            roomName = objects.get("RoomId");
-
-            // Koordinater
-            String
-                roomCoords = objects.get("RoomCoor"),
-                doorCoords = objects.get("DoorCoor"),
-                corridorCoors = objects.get("CorridorCoor");
-            roomX = Integer.parseInt(roomCoords.split("\\.")[0]);
-            roomY = Integer.parseInt(roomCoords.split("\\.")[1]);
-            doorX = Integer.parseInt(doorCoords.split("\\.")[0]);
-            doorY = Integer.parseInt(doorCoords.split("\\.")[1]);
-            corridorX = Integer.parseInt(corridorCoors.split("\\.")[0]);
-            corridorY = Integer.parseInt(corridorCoors.split("\\.")[1]);
-
-            // Path
-            int nbrOfNodes = Integer.parseInt(objects.get("nbrOfNodes"));
-            Log.w("Test", Integer.toString(nbrOfNodes));
-            path = new int[nbrOfNodes][2];
-            String node;
-            for(int i = 1; i < nbrOfNodes+1; i++){
-                node = objects.get("node"+i);
-                path[i-1][0] = Integer.parseInt(node.split("\\.")[0]);
-                path[i-1][1] = Integer.parseInt(node.split("\\.")[1]);
-            }
-
-        // Hämta båda bytearrayer och decodea dem till Bitmaps
-        byte[] overheadBytes = Base64.decode(objects.get("Overhead"),Base64.DEFAULT);
-        overheadMap = getBitmap(overheadBytes);
-
-        byte[] floorMaps = Base64.decode(objects.get("FloorMap"), Base64.DEFAULT);
-        floorMap = getBitmap(floorMaps);
-
-        // Starta den första fragmenten.
-        switchFragment(currentFragmentIndex);
-
-        // Visa frammåt-knappen.
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                btnGoForward.setVisibility(View.VISIBLE);
-            }
-        });
-
-        // Laddar inte längre.
-        loading = false;
-    }
+    */
+    //endregion
 }

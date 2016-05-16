@@ -31,24 +31,18 @@ public class LevelFragment extends Fragment {
     private TextView txtLevel;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_level, container, false);
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_level, container, false);
 
         // Hämta callback.
         try {
             callback = (LevelFragmentCommunicator) getActivity();
         } catch (ClassCastException e) {
-            Log.w("Test", getActivity().toString() + " måste ärva LevelFragmentCommunicator");
+            Log.w("Exception", getActivity().toString() + " måste ärva LevelFragmentCommunicator");
         }
 
         // Hitta view.
-        txtLevel = (TextView)getView().findViewById(R.id.txtLevel);
+        txtLevel = (TextView)v.findViewById(R.id.txtLevel);
 
         // Hämta variabler.
         goalFloor = callback.getGoalFloor();
@@ -61,6 +55,8 @@ public class LevelFragment extends Fragment {
                 topText = getResources().getString(R.string.guide_level_top),
                 bottomText = getResources().getString(R.string.guide_level_bottom) + " " + Integer.toString(goalFloor);
         callback.setInstructions(topText, bottomText);
+
+        return v;
     }
 
     /**
