@@ -124,7 +124,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             // Byta aktivitet till splash.
             startActivity(new Intent(this, SplashActivity.class)); 
         }
-        /**
+
         // funktion för att byta språk till engelska
         if( v== btnEng){
             Locale locale = new Locale("en");
@@ -150,7 +150,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
             startActivity(intent);
         }
-         */
+
     }
     /**
      * Skapar ett nytt intent för MapActivity.
