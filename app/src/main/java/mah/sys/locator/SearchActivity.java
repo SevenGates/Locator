@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.Locale;
-import android.content.res.Resources;
+import android.content.Context;
 
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,7 +32,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnSwe,
         btnEng;
 
-    private String context;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,28 +122,35 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             editor.commit();
 
             // Byta aktivitet till splash.
-            startActivity(new Intent(this, SplashActivity.class));
+            startActivity(new Intent(this, SplashActivity.class)); 
         }
-
-        // Byta till svenska
-        if (v == btnSwe) {
-            String languageToLoad = "values-sv";
-            Locale locale = new Locale(languageToLoad);
+        /**
+        // funktion för att byta språk till engelska
+        if( v== btnEng){
+            Locale locale = new Locale("en");
             Locale.setDefault(locale);
             Configuration config = new Configuration();
             config.locale = locale;
-            super.getResources().updateConfiguration(config,super.getResources().getDisplayMetrics());
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
 
-    }
-        // Byta till engelska
-        if (v == btnEng) {
-            String languageToLoad = "values-en";
-            Locale locale = new Locale(languageToLoad);
+            Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            startActivity(intent);
+
+        }
+        // funktion för att byta språk till svenska
+        if(v==btnSwe){
+            Locale locale = new Locale("se");
             Locale.setDefault(locale);
             Configuration config = new Configuration();
             config.locale = locale;
-        }
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
 
+            Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            startActivity(intent);
+        }
+         */
     }
     /**
      * Skapar ett nytt intent för MapActivity.

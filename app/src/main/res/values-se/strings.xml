@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Locator</string>
+    <string name="app_name_bold">LOCATOR</string>
+    <string name="action_settings">Inställningar</string>
+    <string name="search_for_room">Sök på sal</string>
+    <string name="search_for_prog">Sök på program</string>
+    <string name="choosePlace">Välj plats</string>
+    <string name="choosePlaceField">Välj plats...</string>
+    <string name="choose">Välj</string>
+    <string name="change_place">Byt plats</string>
+    <string name="loading">Laddar...</string>
+
+    <string name="guide_building_top">Steg 1 - Byggnad</string>
+    <string name="guide_building_bottom">Gå till </string>
+    <string name="guide_level_top">Steg 2 - Våning</string>
+    <string name="guide_level_bottom">Gå till våning</string>
+    <string name="guide_room_top">Steg 3 - Vägvisning</string>
+    <string name="guide_room_bottom">Följ pilen till</string>
+    <string name="arrowLeft">Föregående</string>
+    <string name="arrowRight">Nästa</string>
+    <string name="btnText_cancel">Avbryt</string>
+    <string name="btnText_finish">Framme!</string>
+
+    <!-- Errors -->
+    <string name="error_offline">Kunde ej upprätta anslutning till server</string>
+    <string name="error_unknown">Ett oväntat fel inträffades</string>
+    <string name="error_no_complex">Ingen plats med givet namn hittad</string>
+    <string name="error_no_room">Inget rum med givet namn hittad</string>
+    <string name="error_no_program">Inget program med givet namn hittad</string>
+</resources>
