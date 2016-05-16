@@ -3,15 +3,17 @@ package mah.sys.locator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import java.util.Locale;
+import android.content.Context;
 
-import org.w3c.dom.Text;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +27,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private TextView
         txtError,
         txtComplex;
+
+    private ImageButton
+        btnSwe,
+        btnEng;
+
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +50,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         textSearch = (EditText)findViewById(R.id.editTextSearch);
         txtError = (TextView)findViewById(R.id.txtErrorSearch);
         txtComplex = (TextView)findViewById(R.id.txtAppPlace);
+        btnSwe = (ImageButton)findViewById(R.id.btnSwe);
+        btnEng = (ImageButton)findViewById(R.id.btnEng);
 
         // Om Activityn kallas vid fel, visa felmeddelandet.
         try{
@@ -64,7 +74,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         txtComplex.setText(choosenComplex);
 
         // Färga knappar TODO: Detta är inte snyggt, fixa detta?
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{
+                getResources().getColor(R.color.buttonColor)});
         btnSearchProg.setSupportBackgroundTintList(csl);
         btnSearchRoom.setSupportBackgroundTintList(csl);
         btnChangePlace.setSupportBackgroundTintList(csl);
@@ -73,6 +84,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnSearchProg.setOnClickListener(this);
         btnSearchRoom.setOnClickListener(this);
         btnChangePlace.setOnClickListener(this);
+
+        btnSwe.setOnClickListener(this);
+        btnEng.setOnClickListener(this);
     }
 
     /**
@@ -81,6 +95,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
      */
     @Override
     public void onClick(View v){
+
         if(v == btnSearchRoom) {
             // Byta till map aktiviteten via en sal-sökning.
             Intent intent = createIntent();
@@ -107,10 +122,36 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             editor.commit();
 
             // Byta aktivitet till splash.
-            startActivity(new Intent(this, SplashActivity.class));
+            startActivity(new Intent(this, SplashActivity.class)); 
         }
-    }
 
+        // funktion för att byta språk till engelska
+        if( v== btnEng){
+            Locale locale = new Locale("en");
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+
+            Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            startActivity(intent);
+
+        }
+        // funktion för att byta språk till svenska
+        if(v==btnSwe){
+            Locale locale = new Locale("se");
+            Locale.setDefault(locale);
+            Configuration config = new Configuration();
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config,
+                    getBaseContext().getResources().getDisplayMetrics());
+
+            Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            startActivity(intent);
+        }
+
+    }
     /**
      * Skapar ett nytt intent för MapActivity.
      * @return Intent för MapActivity.

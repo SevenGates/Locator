@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +9,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/backgroundColor"
     tools:context="mah.sys.locator.SplashActivity"
-    android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+    android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+    android:nestedScrollingEnabled="false">
 
         <TextView
             android:layout_width="wrap_content"
@@ -84,5 +85,44 @@
             android:backgroundTint="@color/buttonColor"
             android:layout_centerHorizontal="true"
             android:textColor="#fff"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/buttonChangePlace"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:weightSum="1"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.1">
+
+            <ImageButton
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnEng"
+                android:layout_gravity="bottom"
+                android:src="@drawable/engflag"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:layout_width="90dp"
+                android:layout_height="40dp"
+                android:id="@+id/btnSwe"
+                android:layout_gravity="bottom"
+                android:src="@drawable/sweflag"
+                android:layout_weight="0.1"
+                android:layout_alignTop="@+id/btnEng"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
