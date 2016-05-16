@@ -53,15 +53,14 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
     private Bitmap image;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_room, container, false);
 
         // Hämta callback.
         try {
             callback = (RoomFragmentCommunicator) getActivity();
         } catch (ClassCastException e) {
-            Log.w("Test", getActivity().toString() + " måste ärva RoomFragmentCommunicator");
+            Log.w("Exception", getActivity().toString() + " måste ärva RoomFragmentCommunicator");
         }
 
         // Hämta variabler.
@@ -78,10 +77,10 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         imgViewRoomMap = (ZoomableImageView) v.findViewById(R.id.imgViewRoomMap);
         sprPathSelector = (Spinner)v.findViewById(R.id.sprPathSelector);
 
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Väg 1");
-        items.add("Väg 2");
-        items.add("Väg 3");
+        // Hämta vägnamn.
+        String[] items = callback.getPathNames();
+
+        // Instansiera Adapter till spinner.
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, items);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprPathSelector.setAdapter(spinnerArrayAdapter);
@@ -104,32 +103,49 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
      * Märker även ut salern med en cirkel.
      */
     private void drawLineToRoom(int pathNr) {
+        // Skapa ny bild som går rita på.
         image = floorMap.copy(floorMap.getConfig(),true);
         canvas = new Canvas(image);
 
+        // Skapa pencil.
         Paint paint = new Paint();
         paint.setColor(Color.parseColor("#BF360C"));
         paint.setStrokeWidth(5);
 
-        for(int i = 0; i < path[pathNr].length-1; i++)
-            canvas.drawLine(path[pathNr][i][0],path[pathNr][i][1],path[pathNr][i+1][0],path[pathNr][i+1][1], paint);
-        canvas.drawLine(path[pathNr][path[pathNr].length-1][0],path[pathNr][path[pathNr].length-1][1],corridorX,corridorY, paint);
+        // Hjälpvariabler för att öka läsligheten av nedanstående algoritm.
+        int[][] chosenPath = path[pathNr];
+        int
+            length = chosenPath.length,
+            X = 0,
+            Y = 1;
+
+        // Rita ut vägen mellan noder.
+        for(int i = 0; i < length-1; i++)
+            canvas.drawLine(chosenPath[i][X],chosenPath[i][Y],chosenPath[i+1][X],chosenPath[i+1][Y], paint);
+
+        // Rita från sista noden till korridor -> dörr -> rum
+        canvas.drawLine(chosenPath[length-1][X],chosenPath[length-1][Y],corridorX,corridorY, paint);
         canvas.drawLine(corridorX, corridorY, doorX, doorY, paint);
         canvas.drawLine(doorX, doorY, roomX, roomY, paint);
 
-        canvas.drawCircle(roomX, roomY, 12, paint);
+        // Rita cirklar vid start och stop.
+        canvas.drawCircle(chosenPath[0][X], chosenPath[0][Y], 10, paint);
+        canvas.drawCircle(roomX, roomY, 13, paint);
+
+        // Sätt ut den nya bilden.
         imgViewRoomMap.setImageBitmap(image);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.w("Test","Redrawing" + position + " " + id);
+        // Rita om vägen.
+        Log.w("Log","Redrawing for path " + position);
         drawLineToRoom(position);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        Log.w("Test","Nothing");
+        Log.w("Log","Nothing");
     }
 
     /**
@@ -145,5 +161,6 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         int getCorridorX();
         int getCorridorY();
         int[][][] getPath();
+        String[] getPathNames();
     }
 }

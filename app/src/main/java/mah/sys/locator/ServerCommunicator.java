@@ -39,22 +39,22 @@ import java.util.concurrent.Future;
  */
 public class ServerCommunicator {
 
-    public ServerCommunicator() {
-
-    }
-
+    // IP + kommandon på 3 bokstäver var.
     private static final String
             IP_ADDRESS = "81.227.253.254",
             GET_COMPLEX = "GCO,",
             CONFIRM_COMPLEX = "CNF,",
             SEARCH_ROOM = "SER,",
             SEARCH_PROGRAM = "SEP,";
+
+    // Port
     private static final int
             PORT = 8080;
 
     public List<String> getComplexes(String text) throws IOException {
         List<String> strings = new ArrayList<>();
-        // Skapa socket.
+
+        // Skapa socket med timeout på 10 sec.
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
@@ -66,7 +66,8 @@ public class ServerCommunicator {
         output.writeUTF(GET_COMPLEX + text);
         output.flush();
 
-        Log.w("Test", "Message Sent");
+        Log.w("Log", "Message Sent");
+
         try {
             // Läs in JSON objekt
             Object obj = input.readObject();
@@ -74,13 +75,15 @@ public class ServerCommunicator {
 
             // Antal platser
             int nrOfEntries = Integer.parseInt(json.getString("nbrOfPlaces"));
+
+            // Läg till alla platser i listan.
             String complex;
             for (int i = 1; i < nrOfEntries+1; i++) {
                 complex = json.getString("place" + i);
                 strings.add(complex);
             }
         } catch (ClassNotFoundException | JSONException e) {
-
+            Log.w("Exception", e.getMessage());
         }
         // Stäng socket.
         socket.close();
@@ -90,7 +93,8 @@ public class ServerCommunicator {
 
     public boolean confirmComplex(String text) throws IOException {
         boolean confirm = false;
-        // Skapa socket.
+
+        // Skapa socket med timeout på 10 sec.
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
@@ -102,8 +106,9 @@ public class ServerCommunicator {
         output.writeUTF(CONFIRM_COMPLEX + text);
         output.flush();
 
-        Log.w("Test", "Message Sent");
+        Log.w("Log", "Message Sent");
 
+        // Läs svar från server. True = complex finns i DB.
         confirm = input.readBoolean();
 
         // Stäng socket.
@@ -114,10 +119,13 @@ public class ServerCommunicator {
 
     public HashMap<String,String> searchRoom(final String searchTerm, final String chosenComplex) throws IOException, SearchErrorException {
         HashMap<String,String> objects = new HashMap<>();
-        Log.w("Test",searchTerm);
-        Log.w("Test",chosenComplex);
+
+        // Vad som sökts på.
+        Log.w("Log",searchTerm);
+        Log.w("Log",chosenComplex);
+
         try {
-            // Skapa socket.
+            // Skapa socket med timeout på 10 sec.
             Socket socket = new Socket();
             socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
 
@@ -128,19 +136,25 @@ public class ServerCommunicator {
             // Skicka servern ett meddelande.
             output.writeUTF(SEARCH_ROOM + searchTerm + "," + chosenComplex);
             output.flush();
+
             Log.w("Test", "Message Sent");
 
+            // Läs ett objekt från servern.
             Object obj = input.readObject();
 
+            // Casta objektet till JSON.
             JSONObject json = new JSONObject(obj.toString());
 
-            // Fel från databasen, avbryt sökning.
+            // Fel från databasen, avbryt sökning och kasta fel.
             if (json.getString("name").equals("Error")) {
                 socket.close();
                 throw new SearchErrorException(json.getString("message"));
             }
 
+            // Skapa iterator för alla nycklar i JSON.
             Iterator<String> iterator = json.keys();
+
+            // Gå igenom alla nycklar, logga och lägg till dem i hashmap med samma nyckel.
             String itemKey;
             while(iterator.hasNext()) {
                 itemKey = iterator.next();
@@ -148,26 +162,31 @@ public class ServerCommunicator {
                 objects.put(itemKey,json.getString(itemKey));
             }
 
-            Log.w("Test", "Data Parsed");
+            // Klar.
+            Log.w("Log", "Data Parsed");
 
             // Stäng socket.
             socket.close();
 
 
         } catch (JSONException | ClassNotFoundException e) {
-            Log.w("Exception", e.toString());
+            Log.w("Exception", e.getMessage());
         }
 
         return objects;
     }
 }
 
-//// Skapa en buffert att läsa in bytes i. Med hjälpvariabler.
-//ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-//int read;
-//byte[] data = new byte[16384];
-//
-//// Läs från inputströmmen och lägg i bufferten.
-//while ((read = input.read(data, 0, data.length)) != -1)
-//        buffer.write(data, 0, read);
-//        buffer.flush();
+// Detta kan vara ett bättre sätt att läsa Bytearrayer för bilder. Sparar det ifall det behövs.
+
+/*
+// Skapa en buffert att läsa in bytes i. Med hjälpvariabler.
+ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+int read;
+byte[] data = new byte[16384];
+
+// Läs från inputströmmen och lägg i bufferten.
+while ((read = input.read(data, 0, data.length)) != -1)
+        buffer.write(data, 0, read);
+        buffer.flush();
+*/

@@ -25,6 +25,7 @@ import mah.sys.locator.R;
  */
 public class BuildingFragment extends Fragment {
 
+    // Google Maps
     private MapView mapView;
     private GoogleMap googleMap;
 
@@ -42,17 +43,22 @@ public class BuildingFragment extends Fragment {
             Log.w("Exception", getActivity().toString() + " måste ärva BuildingFragmentCommunicator");
         }
 
+        // Hämta view
         mapView = (MapView)v.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
 
+        // Starta Maps.
         try{
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             Log.w("Exception", "Map Init Error: " + e.getMessage());
         }
 
+        // Google Maps initiering.
         googleMap = mapView.getMap();
+
+        // Plats info.
         double latitude = callback.getLatitude();
         double longitude = callback.getLongitude();
 
@@ -60,6 +66,7 @@ public class BuildingFragment extends Fragment {
         MarkerOptions marker = new MarkerOptions().position(new LatLng(latitude,longitude)).title("Hello Maps");
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
 
+        // Lägg till markör på karta.
         googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(latitude,longitude)).zoom(17).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -70,6 +77,7 @@ public class BuildingFragment extends Fragment {
                 topText = getResources().getString(R.string.guide_building_top),
                 bottomText = getResources().getString(R.string.guide_building_bottom) + " " +  buildingName;
         callback.setInstructions(topText, bottomText);
+
         return v;
     }
 

@@ -16,21 +16,17 @@ public class LoadingFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v =  inflater.inflate(R.layout.fragment_loading,container,false);
 
-        return inflater.inflate(R.layout.fragment_loading,container,false);
-    }
-
-    @Override
-    public void onViewStateRestored (Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        spinner = (ProgressBar)getView().findViewById(R.id.loading_spin);
+        spinner = (ProgressBar)v.findViewById(R.id.loading_spin);
         spinner.setVisibility(View.VISIBLE);
+
+        return v;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        //TODO: Detta måste kunna lösas bättre???
         spinner.setVisibility(View.GONE);
     }
 }
