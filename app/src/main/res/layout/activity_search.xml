@@ -94,7 +94,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:weightSum="1"
-        >
+        android:id="@+id/linearLayout">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -103,24 +103,25 @@
             android:layout_weight="0.1">
 
             <ImageButton
-                android:layout_width="90dp"
-                android:layout_height="40dp"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:adjustViewBounds="true"
                 android:id="@+id/btnEng"
-                android:layout_gravity="bottom"
-                android:src="@drawable/engflag"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:scaleType="fitXY"
+                android:background="@drawable/england" />
 
             <ImageButton
-                android:layout_width="90dp"
-                android:layout_height="40dp"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:scaleType="fitCenter"
                 android:id="@+id/btnSwe"
-                android:layout_gravity="bottom"
-                android:src="@drawable/sweflag"
-                android:layout_weight="0.1"
-                android:layout_alignTop="@+id/btnEng"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/btnEng"
+                android:layout_toEndOf="@+id/btnEng"
+                android:background="@drawable/swedish" />
         </RelativeLayout>
 
     </LinearLayout>
