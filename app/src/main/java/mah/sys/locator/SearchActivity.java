@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
@@ -73,9 +74,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         String choosenComplex = settings.getString("chosenComplex","");
         txtComplex.setText(choosenComplex);
 
-        // Färga knappar TODO: Detta är inte snyggt, fixa detta?
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{
-                getResources().getColor(R.color.buttonColor)});
+        // Färga knappar
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this, R.color.buttonColor)});
         btnSearchProg.setSupportBackgroundTintList(csl);
         btnSearchRoom.setSupportBackgroundTintList(csl);
         btnChangePlace.setSupportBackgroundTintList(csl);

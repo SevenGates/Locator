@@ -14,4 +14,12 @@
         android:layout_gravity="center"
         android:textSize="250dp"
         android:typeface="monospace" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sprPathSelectorLevel"
+        android:layout_below="@id/txtLevel"
+        android:layout_gravity="bottom|center"/>
+
 </FrameLayout>

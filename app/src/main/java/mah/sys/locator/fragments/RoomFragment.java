@@ -45,7 +45,8 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
             doorX,
             doorY,
             corridorX,
-            corridorY;
+            corridorY,
+            pathNbr;
     private int[][][] path;
 
     // Bild
@@ -72,6 +73,7 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         corridorX = callback.getCorridorX();
         corridorY = callback.getCorridorY();
         path = callback.getPath();
+        pathNbr = callback.getPathNbr();
 
         // Hitta view.
         imgViewRoomMap = (ZoomableImageView) v.findViewById(R.id.imgViewRoomMap);
@@ -85,9 +87,10 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprPathSelector.setAdapter(spinnerArrayAdapter);
         sprPathSelector.setOnItemSelectedListener(this);
+        sprPathSelector.setSelection(pathNbr);
 
         // Rita linje och märk ut sal på kartan.
-        drawLineToRoom(0);
+        drawLineToRoom(pathNbr);
 
         // Sätt instruktioner.
         String
@@ -162,5 +165,6 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         int getCorridorY();
         int[][][] getPath();
         String[] getPathNames();
+        int getPathNbr();
     }
 }

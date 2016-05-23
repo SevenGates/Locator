@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Base64;
@@ -44,6 +45,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
     private double
             longitude,
             latitude;
+    private int pathNbr = -1;
 
     // Server Com
     private ServerCommunicator server;
@@ -88,8 +90,8 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         txtTopGuide = (TextView) findViewById(R.id.txtGuideStep);
         txtBottomGuide = (TextView) findViewById(R.id.txtGuideDesc);
 
-        // Färga knappar TODO: Detta är inte snyggt, fixa detta?
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{getResources().getColor(R.color.buttonColor)});
+        // Färga knappar
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this, R.color.buttonColor)});
         btnGoBack.setSupportBackgroundTintList(csl);
         btnGoForward.setSupportBackgroundTintList(csl);
 
@@ -140,8 +142,31 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_map, startFragment).commit();
     }
 
-    // region public getFunctions
+    @Override
+    public void setPathNbr(int path) {
+        pathNbr = path;
+    }
 
+    @Override
+    public void deactivateForwardButton() {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this,R.color.disabledButtonColor)});
+        btnGoForward.setSupportBackgroundTintList(csl);
+        btnGoForward.setEnabled(false);
+    }
+
+    @Override
+    public void activateForwardButton() {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this, R.color.buttonColor)});
+        btnGoForward.setSupportBackgroundTintList(csl);
+        btnGoForward.setEnabled(true);
+    }
+
+
+    // region public getFunctions
+    @Override
+    public int getPathNbr() {
+        return pathNbr;
+    }
     @Override
     public int[][][] getPath() {
         return path;

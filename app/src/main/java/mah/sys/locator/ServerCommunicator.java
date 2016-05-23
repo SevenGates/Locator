@@ -137,7 +137,7 @@ public class ServerCommunicator {
             output.writeUTF(SEARCH_ROOM + searchTerm + "," + chosenComplex);
             output.flush();
 
-            Log.w("Test", "Message Sent");
+            Log.w("Log", "Message Sent");
 
             // Läs ett objekt från servern.
             Object obj = input.readObject();
