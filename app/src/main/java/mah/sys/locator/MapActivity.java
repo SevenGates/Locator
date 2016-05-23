@@ -91,9 +91,8 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         txtBottomGuide = (TextView) findViewById(R.id.txtGuideDesc);
 
         // Färga knappar
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this, R.color.buttonColor)});
-        btnGoBack.setSupportBackgroundTintList(csl);
-        btnGoForward.setSupportBackgroundTintList(csl);
+        colorForwardButton(R.color.buttonColor);
+        colorBackButton(R.color.buttonColor);
 
         // Sätt Listeners.
         btnGoBack.setOnClickListener(this);
@@ -149,24 +148,32 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
 
     @Override
     public void deactivateForwardButton() {
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this,R.color.disabledButtonColor)});
-        btnGoForward.setSupportBackgroundTintList(csl);
+        colorForwardButton(R.color.disabledButtonColor);
         btnGoForward.setEnabled(false);
     }
 
     @Override
     public void activateForwardButton() {
-        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this, R.color.buttonColor)});
-        btnGoForward.setSupportBackgroundTintList(csl);
+        colorForwardButton(R.color.buttonColor);
         btnGoForward.setEnabled(true);
     }
 
+    private void colorBackButton(int color) {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this,color)});
+        btnGoBack.setSupportBackgroundTintList(csl);
+    }
+
+    private void colorForwardButton(int color) {
+        ColorStateList csl = new ColorStateList(new int[][]{new int[0]}, new int[]{ContextCompat.getColor(this,color)});
+        btnGoForward.setSupportBackgroundTintList(csl);
+    }
 
     // region public getFunctions
     @Override
     public int getPathNbr() {
         return pathNbr;
     }
+
     @Override
     public int[][][] getPath() {
         return path;

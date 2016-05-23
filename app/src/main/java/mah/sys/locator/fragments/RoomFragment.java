@@ -45,8 +45,7 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
             doorX,
             doorY,
             corridorX,
-            corridorY,
-            pathNbr;
+            corridorY;
     private int[][][] path;
 
     // Bild
@@ -73,11 +72,11 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         corridorX = callback.getCorridorX();
         corridorY = callback.getCorridorY();
         path = callback.getPath();
-        pathNbr = callback.getPathNbr();
 
         // Hitta view.
         imgViewRoomMap = (ZoomableImageView) v.findViewById(R.id.imgViewRoomMap);
         sprPathSelector = (Spinner)v.findViewById(R.id.sprPathSelector);
+        sprPathSelector.setSaveEnabled(false);
 
         // Hämta vägnamn.
         String[] items = callback.getPathNames();
@@ -87,10 +86,11 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprPathSelector.setAdapter(spinnerArrayAdapter);
         sprPathSelector.setOnItemSelectedListener(this);
-        sprPathSelector.setSelection(pathNbr);
+        sprPathSelector.invalidate();
+        sprPathSelector.setSelection(callback.getPathNbr());
 
         // Rita linje och märk ut sal på kartan.
-        drawLineToRoom(pathNbr);
+        drawLineToRoom(callback.getPathNbr());
 
         // Sätt instruktioner.
         String
@@ -143,7 +143,8 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // Rita om vägen.
         Log.w("Log","Redrawing for path " + position);
-        drawLineToRoom(position);
+        callback.setPathNbr(position);
+        drawLineToRoom(callback.getPathNbr());
     }
 
     @Override
@@ -166,5 +167,6 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         int[][][] getPath();
         String[] getPathNames();
         int getPathNbr();
+        void setPathNbr(int path);
     }
 }

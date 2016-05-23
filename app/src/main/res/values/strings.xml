@@ -20,6 +20,7 @@
     <string name="arrowRight">Nästa</string>
     <string name="btnText_cancel">Avbryt</string>
     <string name="btnText_finish">Framme!</string>
+    <string name="spnrPromptText">Välj uppgång...</string>
 
     <!-- Errors -->
     <string name="error_offline">Kunde ej upprätta anslutning till server</string>
