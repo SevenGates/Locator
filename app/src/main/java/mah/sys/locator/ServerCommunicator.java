@@ -88,6 +88,7 @@ public class ServerCommunicator {
         // Stäng socket.
         socket.close();
 
+        Log.w("Debug","Data returned: " + strings.toString());
         return strings;
     }
 
