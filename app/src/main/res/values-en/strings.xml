@@ -21,6 +21,7 @@
     <string name="loading">Loading...</string>
     <string name="search_for_prog">Search by program</string>
     <string name="search_for_room">Search by room</string>
+    <string name="spnrPromptText">Choose path up...</string>
 
     <!-- Errors -->
     <string name="error_no_complex">No location with specified name found</string>

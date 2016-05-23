@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import mah.sys.locator.FragmentCommunicator;
+import mah.sys.locator.NoDefaultSpinner;
 import mah.sys.locator.R;
 
 /**
@@ -36,7 +37,7 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
 
     // Views
     private TextView txtLevel;
-    private Spinner sprPathSelector;
+    private NoDefaultSpinner sprPathSelector;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,12 +50,14 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
             Log.w("Exception", getActivity().toString() + " måste ärva LevelFragmentCommunicator");
         }
 
-        // Stäng av frammåt-knapp.
-        callback.deactivateForwardButton();
+        // Stäng av frammåt-knapp om inget valt.
+        if(callback.getPathNbr() == -1)
+            callback.deactivateForwardButton();
 
         // Hitta views.
         txtLevel = (TextView)v.findViewById(R.id.txtLevel);
-        sprPathSelector = (Spinner)v.findViewById(R.id.sprPathSelectorLevel);
+        sprPathSelector = (NoDefaultSpinner)v.findViewById(R.id.sprPathSelectorLevel);
+        sprPathSelector.setSaveEnabled(false);
 
         // Hämta variabler.
         goalFloor = callback.getGoalFloor();
@@ -64,13 +67,15 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
 
         // Hämta vägnamn.
         ArrayList<String> items = new ArrayList<>(Arrays.asList(callback.getPathNames()));
-        items.add(0, "VÄLJ UPPGÅNG");
 
         // Instansiera Adapter till spinner.
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, items);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprPathSelector.setAdapter(spinnerArrayAdapter);
         sprPathSelector.setOnItemSelectedListener(this);
+
+        if(callback.getPathNbr() != -1)
+            sprPathSelector.setSelection(callback.getPathNbr());
 
         // Sätt instruktioner.
         String
@@ -83,14 +88,8 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // Rita om vägen.
-        Log.w("Log", "Redrawing for path " + position);
-
-        // Om en väg valts aktivera frammåt-knapp.
-        if(position > 0) {
-            callback.setPathNbr(position - 1);
-            callback.activateForwardButton();
-        }
+        callback.setPathNbr(position);
+        callback.activateForwardButton();
     }
 
     @Override
@@ -104,6 +103,7 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
     public interface LevelFragmentCommunicator extends FragmentCommunicator {
         int getGoalFloor();
         void setPathNbr(int path);
+        int getPathNbr();
         String[] getPathNames();
         void deactivateForwardButton();
         void activateForwardButton();
