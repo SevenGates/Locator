@@ -39,6 +39,7 @@
             android:layout_weight="1"
             android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
+            android:hint="Exempel: OR:D131"
             android:layout_below="@+id/txtAppName"
             android:id="@+id/editTextSearch" />
 

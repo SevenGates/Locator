@@ -111,19 +111,20 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         ObservableRunnable<HashMap<String,String>> runnable = new ObservableRunnable<HashMap<String,String>>() {
             @Override
             public void run() {
-                if (isRoomSearch) {
-                    try {
-                        // Serveranrop.
+                try {
+                    // Serveranrop.
+                    if(isRoomSearch)
                         data = server.searchRoom(searchTerm, chosenComplex);
-                        setChanged();
-                        notifyObservers();
-                    } catch (IOException | SearchErrorException e) {
-                        Log.w("Test","Error: " + e.getMessage());
-                        // Fel påträffades. Gå tillbacks till sökning med fel-meddelande.
-                        Intent newIntent = new Intent(getApplicationContext(), SearchActivity.class);
-                        newIntent.putExtra("Error", e);
-                        startActivity(newIntent);
-                    }
+                    else
+                        data = server.searchProg(searchTerm, chosenComplex);
+                    setChanged();
+                    notifyObservers();
+                } catch (IOException | SearchErrorException e) {
+                    Log.w("Test","Error: " + e.getMessage());
+                    // Fel påträffades. Gå tillbacks till sökning med fel-meddelande.
+                    Intent newIntent = new Intent(getApplicationContext(), SearchActivity.class);
+                    newIntent.putExtra("Error", e);
+                    startActivity(newIntent);
                 }
             }
         };

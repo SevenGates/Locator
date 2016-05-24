@@ -44,9 +44,9 @@ public class ComplexAutoCompleteAdapter extends BaseAdapter implements Filterabl
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.simple_dropdown_item,parent,false);
-        }
-        ((TextView)convertView.findViewById(R.id.text1)).setText(getItem(position));
+            //convertView = inflater.inflate(R.layout.simple_dropdown_item,parent,false);
+        }  // TODO: DETTA MÅSTE FINNAS OM VI ANVÄNDER DETTA!!!
+        //((TextView)convertView.findViewById(R.id.text1)).setText(getItem(position));
         return  convertView;
     }
 

@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -96,7 +97,9 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         String
                 topText = getResources().getString(R.string.guide_room_top),
                 bottomText = getResources().getString(R.string.guide_room_bottom) + " " + callback.getRoomName();
-        callback.setInstructions(topText,bottomText);
+        callback.setInstructions(topText, bottomText);
+
+        Toast.makeText(getActivity(), getResources().getString(R.string.toast_zoom), Toast.LENGTH_LONG).show();
 
         return v;
     }

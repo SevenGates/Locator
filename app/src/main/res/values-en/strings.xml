@@ -22,6 +22,7 @@
     <string name="search_for_prog">Search by program</string>
     <string name="search_for_room">Search by room</string>
     <string name="spnrPromptText">Choose path up...</string>
+    <string name="toast_zoom">Zoom in and out by pinching the map.</string>
 
     <!-- Errors -->
     <string name="error_no_complex">No location with specified name found</string>

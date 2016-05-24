@@ -21,6 +21,7 @@
     <string name="btnText_cancel">Avbryt</string>
     <string name="btnText_finish">Framme!</string>
     <string name="spnrPromptText">Välj uppgång...</string>
+    <string name="toast_zoom">Zooma in och ut genom att nypa kartan.</string>
 
     <!-- Errors -->
     <string name="error_offline">Kunde ej upprätta anslutning till server</string>
