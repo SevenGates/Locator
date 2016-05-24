@@ -341,7 +341,10 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
 
         // Hämta alla variabler från Hashmapen.
         buildingName = objects.get("name");
-        goalFloor = Integer.valueOf(objects.get("id").replaceAll("\\D+", ""));
+        String floor = objects.get("id");
+        if(floor.substring(0,2).equals("G8"))
+            floor = floor.substring(2);
+        goalFloor = Integer.valueOf(floor.replaceAll("\\D+", ""));
         roomName = objects.get("roomid");
         longitude = Double.parseDouble(objects.get("long"));
         latitude = Double.parseDouble(objects.get("lat"));
