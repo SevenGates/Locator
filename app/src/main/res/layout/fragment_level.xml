@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="30dp"
+    android:paddingTop="20dp"
     tools:context="mah.sys.locator.fragments.LevelFragment">
 
     <mah.sys.locator.NoDefaultSpinner
@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/sprPathSelectorLevel"
         android:prompt="@string/spnrPromptText"
-        android:layout_gravity="top|center"/>
+        android:layout_gravity="top|center"
+        style="@style/spinner_style"/>
 
     <TextView
         android:layout_width="wrap_content"

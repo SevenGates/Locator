@@ -69,7 +69,7 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
         ArrayList<String> items = new ArrayList<>(Arrays.asList(callback.getPathNames()));
 
         // Instansiera Adapter till spinner.
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(getContext(), R.layout.spinner_item, items);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprPathSelector.setAdapter(spinnerArrayAdapter);
         sprPathSelector.setOnItemSelectedListener(this);

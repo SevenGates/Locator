@@ -91,7 +91,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnEng.setOnClickListener(this);
 
         errorToast = new Toast(this);
-
     }
 
     /**
@@ -121,8 +120,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             editor.remove("chosenComplex");
             editor.commit();
 
-            // Byta aktivitet till splash.
-            startActivity(new Intent(this, SplashActivity.class)); 
+            //Byta aktivitet till splash.
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
         }
 
         // funktion för att byta språk till engelska
@@ -136,7 +136,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
             startActivity(intent);
-
         }
         // funktion för att byta språk till svenska
         if(v==btnSwe){
