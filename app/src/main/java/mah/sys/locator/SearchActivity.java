@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.Locale;
 import android.content.Context;
+import android.widget.Toast;
 
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
@@ -33,7 +35,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         btnSwe,
         btnEng;
 
-    private Context context;
+    private Toast errorToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +63,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             Exception exception = (Exception)bundle.get("Error");
             // Om custom-exception är meddelandet redan i Exceptionen.
             if(exception instanceof SearchErrorException)
-                txtError.setText(exception.getMessage());
+                errorToast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
             else
-                txtError.setText(getErrorText(exception.getClass().toString().substring(6)));
+                errorToast.makeText(this, getErrorText(exception.getClass().toString().substring(6)), Toast.LENGTH_LONG).show();
 
         } catch (NullPointerException e) {
             // Ingen feltext att ladda, bra!
@@ -87,6 +89,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         btnSwe.setOnClickListener(this);
         btnEng.setOnClickListener(this);
+
+        errorToast = new Toast(this);
     }
 
     /**
@@ -104,14 +108,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         if(v == btnSearchProg) {
-            // TODO: IMPLEMENT (COULD)
-            /*
-            // Byta till map aktiviteten via en prog-sökning.
             Intent intent = createIntent();
             intent.putExtra("isRoomSearch", false);
             startActivity(intent);
-            */
-            txtError.setText("Not yet implemented! :)");
         }
 
         if(v == btnChangePlace) {
@@ -121,8 +120,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             editor.remove("chosenComplex");
             editor.commit();
 
-            // Byta aktivitet till splash.
-            startActivity(new Intent(this, SplashActivity.class)); 
+            //Byta aktivitet till splash.
+            Intent intent = new Intent(this, SplashActivity.class);
+            startActivity(intent);
         }
 
         // funktion för att byta språk till engelska
@@ -136,7 +136,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
             Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
             startActivity(intent);
-
         }
         // funktion för att byta språk till svenska
         if(v==btnSwe){

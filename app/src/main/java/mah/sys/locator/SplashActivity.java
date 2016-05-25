@@ -155,7 +155,8 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             Log.w("Debug", spinnerComplex.getSelectedItem().toString() + " Stored!");
 
             // Byta aktivitet.
-            startActivity(new Intent(this, SearchActivity.class));
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
 
             /*
             // Visa laddningsskärm.

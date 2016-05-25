@@ -118,10 +118,73 @@ public class ServerCommunicator {
         return confirm;
     }
 
+    public HashMap<String,String> searchProg(final String searchTerm, final String chosenComplex) throws IOException, SearchErrorException {
+        HashMap<String,String> objects = new HashMap<>();
+
+        // Vad som sökts på.
+        Log.w("Log","Program");
+        Log.w("Log",searchTerm);
+        Log.w("Log",chosenComplex);
+
+        try {
+            // Skapa socket med timeout på 10 sec.
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(IP_ADDRESS, PORT), 10000);
+
+            // Sätt strömmarna.
+            DataOutputStream output = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+            // Skicka servern ett meddelande.
+            output.writeUTF(SEARCH_PROGRAM + searchTerm + "," + chosenComplex);
+            output.flush();
+
+            Log.w("Log", "Message Sent");
+
+            // Läs ett objekt från servern.
+            Object obj = input.readObject();
+
+            // Casta objektet till JSON.
+            JSONObject json = new JSONObject(obj.toString());
+
+
+
+            // Fel från databasen, avbryt sökning och kasta fel.
+            if (json.getString("name").equals("Error")) {
+                socket.close();
+                throw new SearchErrorException(json.getString("message"));
+            }
+
+            // Skapa iterator för alla nycklar i JSON.
+            Iterator<String> iterator = json.keys();
+
+            // Gå igenom alla nycklar, logga och lägg till dem i hashmap med samma nyckel.
+            String itemKey;
+            while(iterator.hasNext()) {
+                itemKey = iterator.next();
+                Log.w("JSON", itemKey);
+                objects.put(itemKey,json.getString(itemKey));
+            }
+
+            // Klar.
+            Log.w("Log", "Data Parsed");
+
+            // Stäng socket.
+            socket.close();
+
+
+        } catch (JSONException | ClassNotFoundException e) {
+            Log.w("Exception", e.getMessage());
+        }
+
+        return objects;
+    }
+
     public HashMap<String,String> searchRoom(final String searchTerm, final String chosenComplex) throws IOException, SearchErrorException {
         HashMap<String,String> objects = new HashMap<>();
 
         // Vad som sökts på.
+        Log.w("Log","Sal");
         Log.w("Log",searchTerm);
         Log.w("Log",chosenComplex);
 
@@ -145,6 +208,8 @@ public class ServerCommunicator {
 
             // Casta objektet till JSON.
             JSONObject json = new JSONObject(obj.toString());
+
+
 
             // Fel från databasen, avbryt sökning och kasta fel.
             if (json.getString("name").equals("Error")) {

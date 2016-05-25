@@ -102,7 +102,7 @@ public class NoDefaultSpinner extends Spinner {
                 final TextView v =
                         (TextView) ((LayoutInflater)getContext().getSystemService(
                                 Context.LAYOUT_INFLATER_SERVICE)).inflate(
-                                android.R.layout.simple_spinner_item,parent,false);
+                                R.layout.spinner_item,parent,false);
                 v.setText(getPrompt());
                 return v;
             }

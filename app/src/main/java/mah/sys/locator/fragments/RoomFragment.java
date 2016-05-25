@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -96,7 +98,11 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
         String
                 topText = getResources().getString(R.string.guide_room_top),
                 bottomText = getResources().getString(R.string.guide_room_bottom) + " " + callback.getRoomName();
-        callback.setInstructions(topText,bottomText);
+        callback.setInstructions(topText, bottomText);
+
+        Toast toast = Toast.makeText(getActivity(), getResources().getString(R.string.toast_zoom), Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL,0,250);
+        toast.show();
 
         return v;
     }
@@ -127,13 +133,14 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
             canvas.drawLine(chosenPath[i][X],chosenPath[i][Y],chosenPath[i+1][X],chosenPath[i+1][Y], paint);
 
         // Rita från sista noden till korridor -> dörr -> rum
-        canvas.drawLine(chosenPath[length-1][X],chosenPath[length-1][Y],corridorX,corridorY, paint);
+        canvas.drawLine(chosenPath[length - 1][X], chosenPath[length - 1][Y], corridorX, corridorY, paint);
         canvas.drawLine(corridorX, corridorY, doorX, doorY, paint);
         canvas.drawLine(doorX, doorY, roomX, roomY, paint);
 
         // Rita cirklar vid start och stop.
-        canvas.drawCircle(chosenPath[0][X], chosenPath[0][Y], 10, paint);
         canvas.drawCircle(roomX, roomY, 13, paint);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(chosenPath[0][X], chosenPath[0][Y], 10, paint);
 
         // Sätt ut den nya bilden.
         imgViewRoomMap.setImageBitmap(image);
