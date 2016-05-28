@@ -27,6 +27,8 @@ import mah.sys.locator.fragments.RoomFragment;
 
 public class MapActivity extends AppCompatActivity implements  View.OnClickListener, Observer, BuildingFragment.BuildingFragmentCommunicator, RoomFragment.RoomFragmentCommunicator, LevelFragment.LevelFragmentCommunicator {
 
+    private final boolean FLAG_TESTING = true;
+
     // Variabler från sökning.
     private Bitmap floorMap;
     private int
@@ -308,7 +310,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         if (v == btnGoBack) {
             // Om första fragmenten, avbryt vägvisning.
             if(currentFragmentIndex <= 0) {
-                startActivity(new Intent(this, SearchActivity.class));
+                finish();
             }
             // Annars gå frammåt i fragment-arrayen.
             else {
@@ -319,7 +321,7 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
         else if (v == btnGoForward) {
             // Om sista fragmenten, klar med vägvisning.
             if(currentFragmentIndex >= FRAGMENTS.length - 1) {
-                startActivity(new Intent(this, SearchActivity.class));
+                finish();
             }
             // Annars gå backåt i fragment-arrayen.
             else {
@@ -404,6 +406,121 @@ public class MapActivity extends AppCompatActivity implements  View.OnClickListe
 
         // Laddar inte längre.
         loading = false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        floorMap = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        floorMap = null;
+    }
+
+    private void Tests() {
+        Test1();
+        Test2();
+        Test3();
+        Test4();
+        Test5();
+        Test6();
+        Test7();
+        Test8();
+        Test9();
+        Test10();
+        Test11();
+        Test12();
+        Test13();
+        Test14();
+        Test15();
+        Test16();
+        Test17();
+        Test18();
+        Test19();
+        Test20();
+    }
+
+    private void Test1 () {
+
+    }
+
+    private void Test2 () {
+
+    }
+
+    private void Test3 () {
+
+    }
+
+    private void Test4 () {
+
+    }
+
+    private void Test5 () {
+
+    }
+
+    private void Test6 () {
+
+    }
+
+    private void Test7 () {
+
+    }
+
+    private void Test8 () {
+
+    }
+
+    private void Test9 () {
+
+    }
+
+    private void Test10 () {
+
+    }
+
+    private void Test11 () {
+
+    }
+
+    private void Test12 () {
+
+    }
+
+    private void Test13 () {
+
+    }
+
+    private void Test14 () {
+
+    }
+
+    private void Test15 () {
+
+    }
+
+    private void Test16 () {
+
+    }
+
+    private void Test17 () {
+
+    }
+
+    private void Test18 () {
+
+    }
+
+    private void Test19 () {
+
+    }
+
+    private void Test20 () {
+
     }
 
     // region Swipe

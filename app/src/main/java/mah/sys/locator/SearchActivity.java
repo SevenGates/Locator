@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -121,8 +122,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             editor.commit();
 
             //Byta aktivitet till splash.
-            Intent intent = new Intent(this, SplashActivity.class);
-            startActivity(intent);
+            finish();
         }
 
         // funktion för att byta språk till engelska
@@ -135,7 +135,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     getBaseContext().getResources().getDisplayMetrics());
 
             Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         }
         // funktion för att byta språk till svenska
         if(v==btnSwe){
@@ -147,7 +149,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     getBaseContext().getResources().getDisplayMetrics());
 
             Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         }
 
     }
@@ -160,8 +164,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         // Vad användaren sökt på. Filtrera ut tecken.
         String searchTerm = textSearch.getText().toString().replaceAll("[^a-öA-Ö0-9]+","");
         intent.putExtra("searchTerm",searchTerm);
-
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.w("Test","Destroy");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.w("Test", "Pause");
     }
 
     /**

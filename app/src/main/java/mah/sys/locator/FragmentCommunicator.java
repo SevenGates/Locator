@@ -8,4 +8,6 @@ import android.graphics.Bitmap;
 public interface FragmentCommunicator {
 
     void setInstructions(String top, String bottom);
+    void activateForwardButton();
+    void deactivateForwardButton();
 }

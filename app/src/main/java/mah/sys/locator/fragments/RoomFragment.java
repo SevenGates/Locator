@@ -65,6 +65,8 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
             Log.w("Exception", getActivity().toString() + " måste ärva RoomFragmentCommunicator");
         }
 
+        callback.activateForwardButton();
+
         // Hämta variabler.
         floorMap = callback.getFloorMap();
         roomX = callback.getRoomX();
@@ -156,9 +158,20 @@ public class RoomFragment extends Fragment implements AdapterView.OnItemSelected
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        Log.w("Log","Nothing");
+        Log.w("Log", "Nothing");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        floorMap = null;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        floorMap = null;
+    }
     /**
      * Kommunikation med activity.
      */

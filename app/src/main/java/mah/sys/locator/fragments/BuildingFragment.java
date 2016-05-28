@@ -43,6 +43,8 @@ public class BuildingFragment extends Fragment {
             Log.w("Exception", getActivity().toString() + " måste ärva BuildingFragmentCommunicator");
         }
 
+        callback.activateForwardButton();
+
         // Hämta view
         mapView = (MapView)v.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);

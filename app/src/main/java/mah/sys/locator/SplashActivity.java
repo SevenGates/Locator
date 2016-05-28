@@ -156,6 +156,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
 
             // Byta aktivitet.
             Intent intent = new Intent(this, SearchActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
             /*

@@ -105,8 +105,6 @@ public class LevelFragment extends Fragment implements AdapterView.OnItemSelecte
         void setPathNbr(int path);
         int getPathNbr();
         String[] getPathNames();
-        void deactivateForwardButton();
-        void activateForwardButton();
     }
 
 }
